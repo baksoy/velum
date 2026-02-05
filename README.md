@@ -1,21 +1,24 @@
 # Velum
 
-A premium, locally-installable Markdown viewer that renders `.md` files with breathtaking typographic beauty. Crafted with editorial luxury in mind.
+A premium, locally-installable Markdown viewer that renders `.md` files with breathtaking typographic beauty. Inspired by [Practical Typography](https://practicaltypography.com/).
+
+**Live Demo:** [baksoy.github.io/velum](https://baksoy.github.io/velum)
 
 ## Features
 
 - **Drag & Drop** — Drop any `.md` file onto the page for instant, stunning rendering
 - **Zero Config** — No build step required. Open `index.html` or serve it
 - **GitHub Pages Ready** — Works as a static site with automatic deployment
-- **Editorial Typography** — Refined serif fonts, perfect typographic scale, breathing whitespace
+- **Editorial Typography** — Refined Spectral serif font, justified text with hyphenation, perfect vertical rhythm
 - **Dark Mode** — Toggle between warm light and rich dark themes
-- **Table of Contents** — Auto-generated floating TOC with scroll spy
+- **Table of Contents** — Auto-generated minimal TOC with scroll spy
 - **Code Highlighting** — Beautiful syntax highlighting with copy-to-clipboard
-- **Front Matter Support** — YAML front matter for title, author, date
+- **Front Matter Support** — YAML front matter for title, author, date, tags
 - **Export to HTML** — Download your rendered document as standalone HTML
 - **Print Styles** — Gorgeous typography in print
 - **Responsive** — Adapts gracefully to any screen size
 - **Accessible** — Keyboard navigation, proper contrast, screen reader support
+- **Secure** — Content Security Policy, DOMPurify sanitization, SRI for CDN resources
 
 ## Quick Start
 
@@ -55,8 +58,9 @@ npm run serve          # Uses http-server
 
 ### Supported Markdown Features
 
-- Headings (H1-H6)
+- Headings (H1-H6) with italic styling and rule separators
 - Paragraphs with **bold**, *italic*, ~~strikethrough~~, `inline code`
+- Justified text with automatic hyphenation
 - Ordered and unordered lists (nested)
 - Task lists / checkboxes
 - Blockquotes (nested)
@@ -69,13 +73,25 @@ npm run serve          # Uses http-server
 
 ## Typography
 
-Velum uses a carefully curated font stack:
+Velum uses a carefully curated typographic system inspired by Practical Typography:
 
-- **Headings**: Instrument Serif — elegant, editorial headlines
-- **Body**: Source Serif 4 — refined, readable body text
+- **Font**: Spectral — a modern oldstyle serif optimized for screen reading
 - **Code**: JetBrains Mono — crisp, ligature-enabled monospace
+- **Headings**: Italic with thin rule above (h1/h2)
+- **Body**: Justified text with automatic hyphenation
+- **Lead paragraph**: Bold first paragraph
 
-The typographic scale follows a 1.25 (Major Third) ratio with generous line heights for optimal readability.
+The typographic scale follows a 1.25 (Major Third) ratio with comfortable line heights for optimal readability.
+
+## Security
+
+Velum implements security best practices:
+
+- **Content Security Policy (CSP)** — Restricts script/style sources
+- **DOMPurify** — Sanitizes all rendered HTML to prevent XSS
+- **Subresource Integrity (SRI)** — Verifies CDN resources haven't been tampered with
+- **Safe YAML parsing** — Prevents prototype pollution attacks
+- **HTML escaping** — Front matter values are escaped before display
 
 ## Customization
 
@@ -95,7 +111,7 @@ Edit `css/code-theme.css` to customize syntax highlighting colors.
 
 - Chrome (latest)
 - Firefox (latest)
-- Safari (latest)
+- Safari (latest) — Best hyphenation support
 - Edge (latest)
 
 ## Credits
@@ -103,7 +119,8 @@ Edit `css/code-theme.css` to customize syntax highlighting colors.
 - [Marked](https://marked.js.org/) — Markdown parser
 - [highlight.js](https://highlightjs.org/) — Syntax highlighting
 - [js-yaml](https://github.com/nodeca/js-yaml) — YAML parser
-- [Google Fonts](https://fonts.google.com/) — Typography
+- [DOMPurify](https://github.com/cure53/DOMPurify) — HTML sanitization
+- [Google Fonts](https://fonts.google.com/) — Spectral & JetBrains Mono
 
 ## License
 

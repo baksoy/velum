@@ -5,7 +5,20 @@
 
 const VelumRenderer = {
     /**
+     * Escape HTML special characters to prevent XSS
+     * @param {string} str - String to escape
+     * @returns {string} - Escaped string
+     */
+    escapeHtml(str) {
+        if (typeof str !== 'string') return '';
+        const div = document.createElement('div');
+        div.textContent = str;
+        return div.innerHTML;
+    },
+
+    /**
      * Parse YAML front matter from markdown content
+     * Uses JSON_SCHEMA for safe parsing (prevents prototype pollution)
      * @param {string} content - Raw markdown content
      * @returns {Object} - { frontMatter: object|null, content: string }
      */
@@ -15,7 +28,8 @@ const VelumRenderer = {
 
         if (match) {
             try {
-                const frontMatter = jsyaml.load(match[1]);
+                // Use JSON_SCHEMA for safe parsing (prevents prototype pollution)
+                const frontMatter = jsyaml.load(match[1], { schema: jsyaml.JSON_SCHEMA });
                 const cleanContent = content.slice(match[0].length);
                 return { frontMatter, content: cleanContent };
             } catch (e) {
@@ -214,7 +228,16 @@ const VelumRenderer = {
         const { frontMatter, content } = this.parseFrontMatter(markdown);
 
         // Render markdown
-        const html = marked.parse(content);
+        let html = marked.parse(content);
+
+        // Sanitize HTML with DOMPurify to prevent XSS
+        if (typeof DOMPurify !== 'undefined') {
+            html = DOMPurify.sanitize(html, {
+                USE_PROFILES: { html: true },
+                ADD_ATTR: ['target', 'loading'],
+                ALLOW_DATA_ATTR: false
+            });
+        }
 
         return { html, frontMatter };
     },
@@ -285,11 +308,11 @@ const VelumRenderer = {
             titleEl.style.display = 'none';
         }
 
-        // Meta info
+        // Meta info (escaped to prevent XSS)
         const metaParts = [];
 
         if (frontMatter.author) {
-            metaParts.push(`<span>By ${frontMatter.author}</span>`);
+            metaParts.push(`<span>By ${this.escapeHtml(frontMatter.author)}</span>`);
         }
 
         if (frontMatter.date) {
@@ -299,11 +322,11 @@ const VelumRenderer = {
                 month: 'long',
                 day: 'numeric'
             });
-            metaParts.push(`<span>${formatted}</span>`);
+            metaParts.push(`<span>${this.escapeHtml(formatted)}</span>`);
         }
 
         if (frontMatter.tags && Array.isArray(frontMatter.tags)) {
-            const tags = frontMatter.tags.map(tag => `<span class="tag">${tag}</span>`).join('');
+            const tags = frontMatter.tags.map(tag => `<span class="tag">${this.escapeHtml(tag)}</span>`).join('');
             metaParts.push(tags);
         }
 
