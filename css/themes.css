@@ -1,0 +1,177 @@
+/* ==========================================================================
+   Velum Theme System
+   CSS Custom Properties for Light and Dark modes
+   ========================================================================== */
+
+:root {
+    /* Light Mode - Warm Parchment */
+    --bg-primary: #FDFAF6;
+    --bg-secondary: #F7F3ED;
+    --bg-tertiary: #EFE9E1;
+    --bg-code: #F3EDE5;
+    --bg-code-inline: rgba(167, 139, 107, 0.12);
+
+    --text-primary: #1a1a1a;
+    --text-secondary: #4a4a4a;
+    --text-tertiary: #6b6b6b;
+    --text-muted: #8b8b8b;
+
+    /* Accent - Deep Terracotta */
+    --accent: #B85C38;
+    --accent-hover: #9A4D2F;
+    --accent-subtle: rgba(184, 92, 56, 0.1);
+    --accent-border: rgba(184, 92, 56, 0.3);
+
+    /* Links */
+    --link: #2D5A7B;
+    --link-hover: #1E3D52;
+    --link-underline: rgba(45, 90, 123, 0.3);
+
+    /* Borders */
+    --border-light: rgba(0, 0, 0, 0.06);
+    --border-medium: rgba(0, 0, 0, 0.1);
+    --border-strong: rgba(0, 0, 0, 0.15);
+
+    /* Shadows */
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.06);
+    --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.08);
+    --shadow-code: 0 2px 8px rgba(0, 0, 0, 0.04);
+
+    /* Blockquote */
+    --blockquote-border: var(--accent);
+    --blockquote-bg: var(--accent-subtle);
+
+    /* Table */
+    --table-border: var(--border-medium);
+    --table-header-bg: var(--bg-secondary);
+    --table-row-alt: var(--bg-secondary);
+
+    /* Selection */
+    --selection-bg: rgba(184, 92, 56, 0.2);
+
+    /* Progress */
+    --progress-bg: var(--accent);
+
+    /* Scrollbar */
+    --scrollbar-track: var(--bg-secondary);
+    --scrollbar-thumb: var(--border-strong);
+    --scrollbar-thumb-hover: var(--text-muted);
+
+    /* TOC */
+    --toc-bg: rgba(253, 250, 246, 0.95);
+    --toc-border: var(--border-light);
+    --toc-active: var(--accent);
+
+    /* Drop zone */
+    --drop-border: var(--border-strong);
+    --drop-bg: var(--bg-secondary);
+    --drop-active-border: var(--accent);
+    --drop-active-bg: var(--accent-subtle);
+
+    /* Overlay */
+    --overlay-bg: rgba(253, 250, 246, 0.98);
+
+    /* Texture opacity */
+    --texture-opacity: 0.03;
+
+    /* Transition */
+    --transition-colors: 0.3s ease;
+}
+
+/* Dark Mode - Rich Deep */
+[data-theme="dark"] {
+    --bg-primary: #0F1419;
+    --bg-secondary: #1A2029;
+    --bg-tertiary: #242D38;
+    --bg-code: #1A2029;
+    --bg-code-inline: rgba(200, 180, 160, 0.1);
+
+    --text-primary: #E8E4DF;
+    --text-secondary: #B8B4AF;
+    --text-tertiary: #8A8680;
+    --text-muted: #5C5854;
+
+    /* Accent - Warm Gold */
+    --accent: #D4A574;
+    --accent-hover: #E5BC92;
+    --accent-subtle: rgba(212, 165, 116, 0.1);
+    --accent-border: rgba(212, 165, 116, 0.3);
+
+    /* Links */
+    --link: #7DAFCB;
+    --link-hover: #A5C8DD;
+    --link-underline: rgba(125, 175, 203, 0.3);
+
+    /* Borders */
+    --border-light: rgba(255, 255, 255, 0.05);
+    --border-medium: rgba(255, 255, 255, 0.08);
+    --border-strong: rgba(255, 255, 255, 0.12);
+
+    /* Shadows */
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.2);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.3);
+    --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.4);
+    --shadow-code: 0 2px 8px rgba(0, 0, 0, 0.3);
+
+    /* Blockquote */
+    --blockquote-border: var(--accent);
+    --blockquote-bg: var(--accent-subtle);
+
+    /* Table */
+    --table-border: var(--border-medium);
+    --table-header-bg: var(--bg-secondary);
+    --table-row-alt: rgba(255, 255, 255, 0.02);
+
+    /* Selection */
+    --selection-bg: rgba(212, 165, 116, 0.25);
+
+    /* Progress */
+    --progress-bg: var(--accent);
+
+    /* Scrollbar */
+    --scrollbar-track: var(--bg-secondary);
+    --scrollbar-thumb: var(--border-strong);
+    --scrollbar-thumb-hover: var(--text-muted);
+
+    /* TOC */
+    --toc-bg: rgba(15, 20, 25, 0.95);
+    --toc-border: var(--border-light);
+    --toc-active: var(--accent);
+
+    /* Drop zone */
+    --drop-border: var(--border-strong);
+    --drop-bg: var(--bg-secondary);
+    --drop-active-border: var(--accent);
+    --drop-active-bg: var(--accent-subtle);
+
+    /* Overlay */
+    --overlay-bg: rgba(15, 20, 25, 0.98);
+
+    /* Texture opacity */
+    --texture-opacity: 0.015;
+}
+
+/* Smooth theme transitions */
+body,
+body * {
+    transition: background-color var(--transition-colors),
+                border-color var(--transition-colors),
+                color var(--transition-colors),
+                box-shadow var(--transition-colors);
+}
+
+/* Prevent transition on page load */
+body.no-transition,
+body.no-transition * {
+    transition: none !important;
+}
+
+/* Selection styling */
+::selection {
+    background: var(--selection-bg);
+}
+
+::-moz-selection {
+    background: var(--selection-bg);
+}

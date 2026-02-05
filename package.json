@@ -1,0 +1,26 @@
+{
+  "name": "velum",
+  "version": "1.0.0",
+  "description": "A premium Markdown viewer with breathtaking typographic beauty",
+  "main": "index.html",
+  "scripts": {
+    "start": "npx serve -l 3000",
+    "dev": "npx live-server --port=3000 --open=/",
+    "serve": "npx http-server -p 3000 -o"
+  },
+  "keywords": [
+    "markdown",
+    "viewer",
+    "typography",
+    "editor",
+    "renderer"
+  ],
+  "author": "",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "devDependencies": {},
+  "dependencies": {}
+}

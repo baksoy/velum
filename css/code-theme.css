@@ -1,0 +1,356 @@
+/* ==========================================================================
+   Velum Code Block Styling
+   Custom syntax highlighting theme matching the editorial aesthetic
+   ========================================================================== */
+
+/* Code Block Container */
+pre {
+    margin: var(--space-8) 0;
+    padding: 0;
+    background: var(--bg-code);
+    border-radius: 12px;
+    border: 1px solid var(--border-light);
+    box-shadow: var(--shadow-code);
+    overflow: hidden;
+    position: relative;
+}
+
+pre code {
+    display: block;
+    padding: var(--space-6);
+    padding-top: var(--space-10);
+    overflow-x: auto;
+    font-family: var(--font-mono);
+    font-size: 0.875rem;
+    line-height: 1.7;
+    tab-size: 2;
+    font-feature-settings: 'liga' 1, 'calt' 1;
+    -webkit-font-smoothing: auto;
+}
+
+/* Language Label */
+pre::before {
+    content: attr(data-language);
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    padding: var(--space-2) var(--space-4);
+    background: var(--bg-tertiary);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-wider);
+    color: var(--text-muted);
+    border-bottom: 1px solid var(--border-light);
+}
+
+pre:not([data-language])::before {
+    content: 'code';
+}
+
+/* Copy Button */
+.code-copy-btn {
+    position: absolute;
+    top: var(--space-2);
+    right: var(--space-3);
+    padding: var(--space-2) var(--space-3);
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-medium);
+    border-radius: 6px;
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--text-tertiary);
+    cursor: pointer;
+    opacity: 0;
+    transition: all 0.2s ease;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+}
+
+pre:hover .code-copy-btn {
+    opacity: 1;
+}
+
+.code-copy-btn:hover {
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+    border-color: var(--border-strong);
+}
+
+.code-copy-btn:active {
+    transform: scale(0.95);
+}
+
+.code-copy-btn.copied {
+    color: var(--accent);
+    border-color: var(--accent-border);
+}
+
+.code-copy-btn svg {
+    width: 14px;
+    height: 14px;
+}
+
+/* ==========================================================================
+   Light Theme Syntax Colors
+   Inspired by GitHub Light with warmer tones
+   ========================================================================== */
+
+/* Base text */
+.hljs {
+    color: var(--text-primary);
+    background: transparent;
+}
+
+/* Comments */
+.hljs-comment,
+.hljs-quote {
+    color: #6a737d;
+    font-style: italic;
+}
+
+/* Keywords */
+.hljs-keyword,
+.hljs-selector-tag,
+.hljs-addition {
+    color: #B85C38;
+    font-weight: 500;
+}
+
+/* Strings */
+.hljs-string,
+.hljs-doctag,
+.hljs-regexp,
+.hljs-meta .hljs-string {
+    color: #22863a;
+}
+
+/* Numbers */
+.hljs-number,
+.hljs-literal,
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag .hljs-attr {
+    color: #005cc5;
+}
+
+/* Functions */
+.hljs-title,
+.hljs-section,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class {
+    color: #6f42c1;
+    font-weight: 500;
+}
+
+/* Built-ins */
+.hljs-built_in,
+.hljs-builtin-name {
+    color: #B85C38;
+}
+
+/* Types */
+.hljs-type,
+.hljs-class .hljs-title {
+    color: #d73a49;
+    font-weight: 500;
+}
+
+/* Attributes */
+.hljs-attr,
+.hljs-attribute {
+    color: #6f42c1;
+}
+
+/* Tags */
+.hljs-tag {
+    color: #22863a;
+}
+
+/* Symbols */
+.hljs-symbol,
+.hljs-bullet,
+.hljs-link {
+    color: #005cc5;
+}
+
+/* Deletion */
+.hljs-deletion {
+    color: #b31d28;
+    background: #ffeef0;
+}
+
+/* Addition */
+.hljs-addition {
+    color: #22863a;
+    background: #f0fff4;
+}
+
+/* Meta */
+.hljs-meta {
+    color: #6a737d;
+}
+
+/* Emphasis */
+.hljs-emphasis {
+    font-style: italic;
+}
+
+/* Strong */
+.hljs-strong {
+    font-weight: 600;
+}
+
+/* ==========================================================================
+   Dark Theme Syntax Colors
+   Custom warm dark theme
+   ========================================================================== */
+
+[data-theme="dark"] .hljs {
+    color: var(--text-primary);
+}
+
+[data-theme="dark"] .hljs-comment,
+[data-theme="dark"] .hljs-quote {
+    color: #6b7280;
+    font-style: italic;
+}
+
+[data-theme="dark"] .hljs-keyword,
+[data-theme="dark"] .hljs-selector-tag {
+    color: #D4A574;
+    font-weight: 500;
+}
+
+[data-theme="dark"] .hljs-string,
+[data-theme="dark"] .hljs-doctag,
+[data-theme="dark"] .hljs-regexp,
+[data-theme="dark"] .hljs-meta .hljs-string {
+    color: #7EC699;
+}
+
+[data-theme="dark"] .hljs-number,
+[data-theme="dark"] .hljs-literal,
+[data-theme="dark"] .hljs-variable,
+[data-theme="dark"] .hljs-template-variable,
+[data-theme="dark"] .hljs-tag .hljs-attr {
+    color: #79C0FF;
+}
+
+[data-theme="dark"] .hljs-title,
+[data-theme="dark"] .hljs-section,
+[data-theme="dark"] .hljs-name,
+[data-theme="dark"] .hljs-selector-id,
+[data-theme="dark"] .hljs-selector-class {
+    color: #B8A5FF;
+    font-weight: 500;
+}
+
+[data-theme="dark"] .hljs-built_in,
+[data-theme="dark"] .hljs-builtin-name {
+    color: #D4A574;
+}
+
+[data-theme="dark"] .hljs-type,
+[data-theme="dark"] .hljs-class .hljs-title {
+    color: #FF9B9B;
+    font-weight: 500;
+}
+
+[data-theme="dark"] .hljs-attr,
+[data-theme="dark"] .hljs-attribute {
+    color: #B8A5FF;
+}
+
+[data-theme="dark"] .hljs-tag {
+    color: #7EC699;
+}
+
+[data-theme="dark"] .hljs-symbol,
+[data-theme="dark"] .hljs-bullet,
+[data-theme="dark"] .hljs-link {
+    color: #79C0FF;
+}
+
+[data-theme="dark"] .hljs-deletion {
+    color: #FF9B9B;
+    background: rgba(255, 155, 155, 0.1);
+}
+
+[data-theme="dark"] .hljs-addition {
+    color: #7EC699;
+    background: rgba(126, 198, 153, 0.1);
+}
+
+[data-theme="dark"] .hljs-meta {
+    color: #6b7280;
+}
+
+/* ==========================================================================
+   Line Numbers (Optional)
+   ========================================================================== */
+
+pre.line-numbers {
+    padding-left: 3.5em;
+}
+
+pre.line-numbers code {
+    position: relative;
+}
+
+.line-numbers-rows {
+    position: absolute;
+    left: -3em;
+    top: var(--space-10);
+    width: 2.5em;
+    padding: var(--space-6) 0;
+    font-size: 0.875rem;
+    line-height: 1.7;
+    text-align: right;
+    color: var(--text-muted);
+    pointer-events: none;
+    user-select: none;
+    border-right: 1px solid var(--border-light);
+}
+
+.line-numbers-rows > span {
+    display: block;
+    padding-right: var(--space-3);
+}
+
+/* ==========================================================================
+   Code Block Diff Styling
+   ========================================================================== */
+
+.diff-highlight .hljs-addition {
+    background: rgba(34, 134, 58, 0.15);
+}
+
+.diff-highlight .hljs-deletion {
+    background: rgba(179, 29, 40, 0.15);
+}
+
+/* ==========================================================================
+   Scrollbar for Code Blocks
+   ========================================================================== */
+
+pre code::-webkit-scrollbar {
+    height: 6px;
+}
+
+pre code::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+pre code::-webkit-scrollbar-thumb {
+    background: var(--scrollbar-thumb);
+    border-radius: 3px;
+}
+
+pre code::-webkit-scrollbar-thumb:hover {
+    background: var(--scrollbar-thumb-hover);
+}

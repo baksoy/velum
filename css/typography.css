@@ -1,0 +1,422 @@
+/* ==========================================================================
+   Velum Typography System
+   Editorial luxury typography with perfect vertical rhythm
+   ========================================================================== */
+
+/* Font Stack Definitions */
+:root {
+    --font-heading: 'Instrument Serif', Georgia, 'Times New Roman', serif;
+    --font-body: 'Source Serif 4', Georgia, 'Times New Roman', serif;
+    --font-mono: 'JetBrains Mono', 'Fira Code', 'SF Mono', Consolas, monospace;
+
+    /* Typographic Scale - 1.25 (Major Third) */
+    --text-xs: 0.64rem;      /* 10.24px */
+    --text-sm: 0.8rem;       /* 12.8px */
+    --text-base: 1rem;       /* 16px base, scales to 18-20px */
+    --text-lg: 1.25rem;      /* 20px */
+    --text-xl: 1.563rem;     /* 25px */
+    --text-2xl: 1.953rem;    /* 31.25px */
+    --text-3xl: 2.441rem;    /* 39px */
+    --text-4xl: 3.052rem;    /* 48.8px */
+    --text-5xl: 3.815rem;    /* 61px */
+
+    /* Line Heights */
+    --leading-tight: 1.2;
+    --leading-snug: 1.35;
+    --leading-normal: 1.5;
+    --leading-relaxed: 1.6;
+    --leading-loose: 1.7;
+
+    /* Letter Spacing */
+    --tracking-tight: -0.02em;
+    --tracking-normal: 0;
+    --tracking-wide: 0.02em;
+    --tracking-wider: 0.04em;
+
+    /* Spacing Scale */
+    --space-1: 0.25rem;
+    --space-2: 0.5rem;
+    --space-3: 0.75rem;
+    --space-4: 1rem;
+    --space-5: 1.25rem;
+    --space-6: 1.5rem;
+    --space-8: 2rem;
+    --space-10: 2.5rem;
+    --space-12: 3rem;
+    --space-16: 4rem;
+
+    /* Content Width */
+    --content-width: 42rem; /* ~672px, optimal reading measure */
+    --content-width-wide: 56rem;
+}
+
+/* Base Typography */
+html {
+    font-size: 16px;
+}
+
+@media (min-width: 640px) {
+    html {
+        font-size: 18px;
+    }
+}
+
+@media (min-width: 1024px) {
+    html {
+        font-size: 19px;
+    }
+}
+
+body {
+    font-family: var(--font-body);
+    font-size: var(--text-base);
+    font-weight: 400;
+    line-height: var(--leading-relaxed);
+    color: var(--text-primary);
+    font-feature-settings: 'kern' 1, 'liga' 1, 'calt' 1, 'onum' 1;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-optical-sizing: auto;
+}
+
+/* Headings */
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading);
+    font-weight: 400;
+    line-height: var(--leading-tight);
+    letter-spacing: var(--tracking-tight);
+    color: var(--text-primary);
+    margin-top: 0;
+    margin-bottom: var(--space-4);
+    text-wrap: balance;
+}
+
+.content h1 {
+    font-size: var(--text-4xl);
+    margin-top: var(--space-16);
+    margin-bottom: var(--space-8);
+    font-style: italic;
+}
+
+.content h2 {
+    font-size: var(--text-3xl);
+    margin-top: var(--space-12);
+    margin-bottom: var(--space-6);
+    padding-bottom: var(--space-3);
+    border-bottom: 1px solid var(--border-light);
+}
+
+.content h3 {
+    font-size: var(--text-2xl);
+    margin-top: var(--space-10);
+    margin-bottom: var(--space-5);
+}
+
+.content h4 {
+    font-size: var(--text-xl);
+    margin-top: var(--space-8);
+    margin-bottom: var(--space-4);
+    font-style: italic;
+}
+
+.content h5 {
+    font-size: var(--text-lg);
+    margin-top: var(--space-6);
+    margin-bottom: var(--space-3);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-wider);
+    font-family: var(--font-body);
+    font-weight: 600;
+}
+
+.content h6 {
+    font-size: var(--text-base);
+    margin-top: var(--space-6);
+    margin-bottom: var(--space-3);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-wider);
+    font-family: var(--font-body);
+    font-weight: 600;
+    color: var(--text-secondary);
+}
+
+/* Paragraphs */
+p {
+    margin-top: 0;
+    margin-bottom: var(--space-6);
+    orphans: 3;
+    widows: 3;
+}
+
+/* Lead paragraph */
+.content > p:first-of-type {
+    font-size: var(--text-lg);
+    line-height: var(--leading-loose);
+    color: var(--text-secondary);
+}
+
+/* Links */
+a {
+    color: var(--link);
+    text-decoration: none;
+    background-image: linear-gradient(var(--link-underline), var(--link-underline));
+    background-size: 100% 1px;
+    background-position: 0 100%;
+    background-repeat: no-repeat;
+    transition: color 0.2s ease, background-size 0.2s ease;
+}
+
+a:hover {
+    color: var(--link-hover);
+    background-size: 100% 2px;
+}
+
+a:focus {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+}
+
+/* Bold & Italic */
+strong, b {
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+em, i {
+    font-style: italic;
+}
+
+/* Small text */
+small {
+    font-size: var(--text-sm);
+}
+
+/* Abbreviations */
+abbr[title] {
+    text-decoration: underline dotted;
+    cursor: help;
+}
+
+/* Mark / Highlight */
+mark {
+    background: var(--accent-subtle);
+    color: inherit;
+    padding: 0.1em 0.3em;
+    border-radius: 2px;
+}
+
+/* Strikethrough */
+del, s {
+    text-decoration: line-through;
+    color: var(--text-tertiary);
+}
+
+/* Subscript & Superscript */
+sub, sup {
+    font-size: var(--text-xs);
+    line-height: 0;
+    position: relative;
+    vertical-align: baseline;
+}
+
+sup {
+    top: -0.5em;
+}
+
+sub {
+    bottom: -0.25em;
+}
+
+/* Horizontal Rule */
+hr {
+    border: none;
+    height: 1px;
+    background: var(--border-light);
+    margin: var(--space-12) auto;
+    max-width: 6rem;
+    position: relative;
+}
+
+hr::before {
+    content: '◆';
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    background: var(--bg-primary);
+    padding: 0 var(--space-4);
+    color: var(--text-muted);
+    font-size: var(--text-sm);
+}
+
+/* Lists */
+ul, ol {
+    margin-top: 0;
+    margin-bottom: var(--space-6);
+    padding-left: var(--space-6);
+    line-height: var(--leading-tight);
+}
+
+ul ul, ul ol,
+ol ul, ol ol {
+    margin-bottom: 0;
+    margin-top: var(--space-2);
+}
+
+li {
+    margin-bottom: 0;
+}
+
+li::marker {
+    color: var(--accent);
+}
+
+ul > li::marker {
+    content: '•  ';
+    font-size: 1.2em;
+}
+
+ul ul > li::marker {
+    content: '◦  ';
+}
+
+ul ul ul > li::marker {
+    content: '▪  ';
+}
+
+/* Task Lists / Checkboxes */
+ul.task-list {
+    list-style: none;
+    padding-left: 0;
+}
+
+ul.task-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-3);
+}
+
+ul.task-list input[type="checkbox"] {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 1.1em;
+    height: 1.1em;
+    border: 1.5px solid var(--border-strong);
+    border-radius: 3px;
+    margin-top: 0.35em;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: all 0.2s ease;
+}
+
+ul.task-list input[type="checkbox"]:checked {
+    background: var(--accent);
+    border-color: var(--accent);
+}
+
+ul.task-list input[type="checkbox"]:checked::after {
+    content: '✓';
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-size: 0.75em;
+    font-weight: bold;
+    height: 100%;
+}
+
+/* Definition Lists */
+dl {
+    margin-bottom: var(--space-6);
+}
+
+dt {
+    font-weight: 600;
+    margin-top: var(--space-4);
+}
+
+dd {
+    margin-left: var(--space-6);
+    margin-bottom: var(--space-2);
+    color: var(--text-secondary);
+}
+
+/* Blockquotes */
+blockquote {
+    margin: var(--space-8) 0;
+    padding: var(--space-6) var(--space-8);
+    background: var(--blockquote-bg);
+    border-left: 4px solid var(--blockquote-border);
+    border-radius: 0 8px 8px 0;
+    font-style: italic;
+    color: var(--text-secondary);
+    position: relative;
+}
+
+blockquote::before {
+    content: '"';
+    position: absolute;
+    left: var(--space-4);
+    top: var(--space-2);
+    font-family: var(--font-heading);
+    font-size: var(--text-4xl);
+    color: var(--accent);
+    opacity: 0.3;
+    line-height: 1;
+}
+
+blockquote p {
+    margin-bottom: var(--space-4);
+}
+
+blockquote p:last-child {
+    margin-bottom: 0;
+}
+
+blockquote blockquote {
+    margin-top: var(--space-4);
+    margin-bottom: 0;
+}
+
+/* Footnotes */
+.footnotes {
+    margin-top: var(--space-16);
+    padding-top: var(--space-8);
+    border-top: 1px solid var(--border-light);
+    font-size: var(--text-sm);
+    color: var(--text-secondary);
+}
+
+.footnotes h2 {
+    font-size: var(--text-lg);
+    font-family: var(--font-body);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-wider);
+}
+
+.footnotes ol {
+    padding-left: var(--space-5);
+}
+
+sup.footnote-ref a {
+    font-size: var(--text-xs);
+    background: var(--accent-subtle);
+    padding: 0.1em 0.4em;
+    border-radius: 3px;
+    font-weight: 500;
+}
+
+/* Figure & Figcaption */
+figure {
+    margin: var(--space-8) 0;
+}
+
+figcaption {
+    font-size: var(--text-sm);
+    color: var(--text-tertiary);
+    text-align: center;
+    margin-top: var(--space-3);
+    font-style: italic;
+}

@@ -1,0 +1,239 @@
+/* ==========================================================================
+   Velum Print Styles
+   Beautiful typographic output for printing
+   ========================================================================== */
+
+@media print {
+    /* Reset page settings */
+    @page {
+        margin: 1.5cm 2cm;
+        size: A4;
+    }
+
+    @page :first {
+        margin-top: 3cm;
+    }
+
+    /* Hide UI elements */
+    .theme-toggle,
+    .export-btn,
+    .toc,
+    .reading-progress,
+    .drag-overlay,
+    .texture-overlay,
+    .landing,
+    .code-copy-btn,
+    #file-input {
+        display: none !important;
+    }
+
+    /* Reset backgrounds and colors */
+    body {
+        background: white !important;
+        color: #1a1a1a !important;
+        font-size: 11pt;
+        line-height: 1.6;
+    }
+
+    .container {
+        max-width: 100%;
+        padding: 0;
+    }
+
+    .article {
+        max-width: 100%;
+        padding: 0;
+        margin: 0;
+        display: block !important;
+    }
+
+    /* Typography for print */
+    h1, h2, h3, h4, h5, h6 {
+        color: #1a1a1a !important;
+        page-break-after: avoid;
+        page-break-inside: avoid;
+    }
+
+    h1 { font-size: 24pt; margin-top: 0; }
+    h2 { font-size: 18pt; margin-top: 24pt; border-bottom: 0.5pt solid #ccc; padding-bottom: 6pt; }
+    h3 { font-size: 14pt; margin-top: 18pt; }
+    h4 { font-size: 12pt; margin-top: 14pt; }
+    h5, h6 { font-size: 11pt; margin-top: 12pt; }
+
+    p {
+        orphans: 3;
+        widows: 3;
+    }
+
+    /* Links - show URL for external links */
+    a {
+        color: #1a1a1a !important;
+        text-decoration: underline;
+    }
+
+    a[href^="http"]:after {
+        content: " (" attr(href) ")";
+        font-size: 9pt;
+        color: #666;
+    }
+
+    a[href^="#"]:after {
+        content: none;
+    }
+
+    /* Blockquotes */
+    blockquote {
+        border-left: 3pt solid #ccc;
+        margin-left: 0;
+        padding-left: 12pt;
+        background: none !important;
+        color: #333 !important;
+    }
+
+    blockquote::before {
+        display: none;
+    }
+
+    /* Code blocks */
+    pre {
+        background: #f5f5f5 !important;
+        border: 0.5pt solid #ddd;
+        border-radius: 4pt;
+        padding: 10pt !important;
+        page-break-inside: avoid;
+        overflow-wrap: break-word;
+        white-space: pre-wrap;
+        font-size: 9pt;
+    }
+
+    pre::before {
+        display: none;
+    }
+
+    pre code {
+        padding: 0 !important;
+        background: none !important;
+    }
+
+    code {
+        font-size: 9pt;
+        background: #f0f0f0 !important;
+        padding: 1pt 3pt;
+        border-radius: 2pt;
+    }
+
+    /* Tables */
+    table {
+        border-collapse: collapse;
+        width: 100%;
+        page-break-inside: avoid;
+    }
+
+    th, td {
+        border: 0.5pt solid #ccc;
+        padding: 6pt 8pt;
+        text-align: left;
+    }
+
+    th {
+        background: #f0f0f0 !important;
+        font-weight: 600;
+    }
+
+    tr:nth-child(even) {
+        background: #fafafa !important;
+    }
+
+    /* Images */
+    img {
+        max-width: 100%;
+        page-break-inside: avoid;
+        box-shadow: none !important;
+    }
+
+    figure {
+        page-break-inside: avoid;
+    }
+
+    /* Lists */
+    ul, ol {
+        page-break-inside: avoid;
+    }
+
+    li {
+        page-break-inside: avoid;
+    }
+
+    /* Horizontal rules */
+    hr {
+        border: none;
+        border-top: 0.5pt solid #ccc;
+        margin: 18pt 0;
+    }
+
+    hr::before {
+        display: none;
+    }
+
+    /* Article header */
+    .article-header {
+        text-align: center;
+        margin-bottom: 24pt;
+        padding-bottom: 12pt;
+        border-bottom: 0.5pt solid #ccc;
+    }
+
+    .article-title {
+        font-size: 28pt;
+    }
+
+    .article-meta {
+        color: #666 !important;
+        font-size: 10pt;
+    }
+
+    /* Syntax highlighting - flatten to grayscale for print */
+    .hljs-keyword,
+    .hljs-built_in,
+    .hljs-type {
+        font-weight: 600;
+    }
+
+    .hljs-comment,
+    .hljs-quote {
+        font-style: italic;
+        color: #666 !important;
+    }
+
+    .hljs-string {
+        color: #333 !important;
+    }
+
+    /* Checkboxes for task lists */
+    input[type="checkbox"] {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 10pt;
+        height: 10pt;
+        border: 0.5pt solid #666;
+        display: inline-block;
+        vertical-align: middle;
+        margin-right: 6pt;
+    }
+
+    input[type="checkbox"]:checked::after {
+        content: "✓";
+        font-size: 8pt;
+        line-height: 10pt;
+        display: block;
+        text-align: center;
+    }
+
+    /* Footnotes */
+    .footnotes {
+        margin-top: 24pt;
+        padding-top: 12pt;
+        border-top: 0.5pt solid #ccc;
+        font-size: 9pt;
+    }
+}
