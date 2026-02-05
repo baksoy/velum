@@ -42,7 +42,8 @@ const Velum = {
     initTheme() {
         const savedTheme = localStorage.getItem('velum-theme');
 
-        if (savedTheme) {
+        // Validate theme value (only allow 'light' or 'dark')
+        if (savedTheme === 'light' || savedTheme === 'dark') {
             document.documentElement.setAttribute('data-theme', savedTheme);
         } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
             document.documentElement.setAttribute('data-theme', 'dark');
@@ -140,19 +141,19 @@ const Velum = {
     <title>Exported from Velum</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,500;0,8..60,600;1,8..60,400;1,8..60,500&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg-primary: #FDFAF6;
-            --text-primary: #1a1a1a;
+            --text-primary: #2d2d2d;
             --text-secondary: #4a4a4a;
             --text-muted: #8b8b8b;
             --accent: #B85C38;
             --link: #2D5A7B;
             --border-light: rgba(0, 0, 0, 0.06);
             --bg-code: #F3EDE5;
-            --font-heading: 'Instrument Serif', Georgia, serif;
-            --font-body: 'Source Serif 4', Georgia, serif;
+            --font-heading: 'Spectral', Georgia, serif;
+            --font-body: 'Spectral', Georgia, serif;
             --font-mono: 'JetBrains Mono', monospace;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
