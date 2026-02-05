@@ -19,6 +19,10 @@ const Velum = {
         this.initTheme();
         this.setupThemeToggle();
 
+        // Setup font
+        this.initFont();
+        this.setupFontToggle();
+
         // Setup reading progress
         this.setupReadingProgress();
 
@@ -85,6 +89,53 @@ const Velum = {
 
         document.documentElement.setAttribute('data-theme', newTheme);
         localStorage.setItem('velum-theme', newTheme);
+    },
+
+    /**
+     * Initialize font from localStorage
+     */
+    initFont() {
+        const savedFont = localStorage.getItem('velum-font');
+
+        if (savedFont) {
+            document.documentElement.setAttribute('data-font', savedFont);
+        }
+        // Default is "a" (no attribute needed, CSS defaults apply)
+    },
+
+    /**
+     * Setup font toggle button
+     */
+    setupFontToggle() {
+        const toggle = document.getElementById('font-toggle');
+        if (!toggle) return;
+
+        toggle.addEventListener('click', () => {
+            this.toggleFont();
+        });
+
+        // Alt+F keyboard shortcut
+        document.addEventListener('keydown', (e) => {
+            if (e.altKey && e.key === 'f') {
+                e.preventDefault();
+                this.toggleFont();
+            }
+        });
+    },
+
+    /**
+     * Toggle between font pairings A and B
+     */
+    toggleFont() {
+        const currentFont = document.documentElement.getAttribute('data-font');
+        const newFont = currentFont === 'b' ? 'a' : 'b';
+
+        if (newFont === 'a') {
+            document.documentElement.removeAttribute('data-font');
+        } else {
+            document.documentElement.setAttribute('data-font', newFont);
+        }
+        localStorage.setItem('velum-font', newFont);
     },
 
     /**

@@ -4,9 +4,10 @@
    ========================================================================== */
 
 /* Font Stack Definitions */
+/* Default: Font A - Playfair Display + Lora (Classic editorial) */
 :root {
-    --font-heading: 'Instrument Serif', Georgia, 'Times New Roman', serif;
-    --font-body: 'Source Serif 4', Georgia, 'Times New Roman', serif;
+    --font-heading: 'Playfair Display', Georgia, 'Times New Roman', serif;
+    --font-body: 'Lora', Georgia, 'Times New Roman', serif;
     --font-mono: 'JetBrains Mono', 'Fira Code', 'SF Mono', Consolas, monospace;
 
     /* Typographic Scale - 1.25 (Major Third) */
@@ -48,6 +49,12 @@
     /* Content Width */
     --content-width: 42rem; /* ~672px, optimal reading measure */
     --content-width-wide: 56rem;
+}
+
+/* Font B - Libre Baskerville + Merriweather (Book typography) */
+[data-font="b"] {
+    --font-heading: 'Libre Baskerville', Georgia, 'Times New Roman', serif;
+    --font-body: 'Merriweather', Georgia, 'Times New Roman', serif;
 }
 
 /* Base Typography */
@@ -250,21 +257,25 @@ hr::before {
     font-size: var(--text-sm);
 }
 
-/* Lists */
+/* Lists — Monocle-tight spacing */
 ul, ol {
     margin-top: 0;
     margin-bottom: var(--space-6);
-    padding-left: var(--space-6);
-    line-height: var(--leading-tight);
+    padding-left: var(--space-5);
 }
 
 ul ul, ul ol,
 ol ul, ol ol {
     margin-bottom: 0;
-    margin-top: var(--space-2);
+    margin-top: var(--space-1);
 }
 
 li {
+    margin-bottom: var(--space-1);
+    line-height: var(--leading-snug);
+}
+
+li:last-child {
     margin-bottom: 0;
 }
 
