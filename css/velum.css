@@ -92,49 +92,11 @@ body {
     display: block;
 }
 
-/* Font Toggle */
-.font-toggle {
-    position: fixed;
-    top: var(--space-6);
-    right: calc(var(--space-6) + 52px);
-    z-index: 100;
-    background: var(--bg-secondary);
-    border: 1px solid var(--border-light);
-    border-radius: 50%;
-    width: 44px;
-    height: 44px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--text-secondary);
-    box-shadow: var(--shadow-md);
-    transition: all 0.2s ease;
-}
-
-.font-toggle:hover {
-    background: var(--bg-tertiary);
-    color: var(--text-primary);
-    transform: scale(1.05);
-}
-
-.font-toggle:focus {
-    outline: 2px solid var(--accent);
-    outline-offset: 2px;
-}
-
-.font-toggle-text {
-    font-family: var(--font-heading);
-    font-size: 16px;
-    font-weight: 500;
-    letter-spacing: -0.02em;
-}
-
 /* Export Button */
 .export-btn {
     position: fixed;
     top: var(--space-6);
-    right: calc(var(--space-6) + 104px);
+    right: calc(var(--space-6) + 52px);
     z-index: 100;
     background: var(--bg-secondary);
     border: 1px solid var(--border-light);
@@ -200,8 +162,7 @@ body {
 .landing-title {
     font-family: var(--font-heading);
     font-size: var(--text-5xl);
-    font-weight: 400;
-    font-style: italic;
+    font-weight: 600;
     letter-spacing: var(--tracking-tight);
     color: var(--text-primary);
     margin-bottom: var(--space-3);
@@ -357,8 +318,8 @@ body {
 
 .article-title {
     font-family: var(--font-heading);
-    font-size: var(--text-4xl);
-    font-style: italic;
+    font-size: var(--text-3xl);
+    font-weight: 600;
     margin-bottom: var(--space-4);
 }
 
@@ -469,27 +430,23 @@ body {
 }
 
 /* =========================================================================
-   Table of Contents
+   Table of Contents — Editorial Minimal Style
    ========================================================================== */
 .toc {
     position: fixed;
-    left: var(--space-6);
+    left: var(--space-8);
     top: 50%;
     transform: translateY(-50%);
-    max-width: 220px;
-    max-height: 60vh;
+    max-width: 200px;
+    max-height: 70vh;
     overflow-y: auto;
-    background: var(--toc-bg);
-    border: 1px solid var(--toc-border);
-    border-radius: 12px;
-    padding: var(--space-5);
-    box-shadow: var(--shadow-md);
+    background: transparent;
+    border: none;
+    padding: 0;
     opacity: 0;
     visibility: hidden;
-    transition: all 0.3s ease;
+    transition: opacity 0.4s ease;
     z-index: 50;
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
 }
 
 .toc.visible {
@@ -498,13 +455,14 @@ body {
 }
 
 .toc-header {
-    font-size: var(--text-xs);
+    font-family: var(--font-body);
+    font-size: 0.7rem;
     text-transform: uppercase;
-    letter-spacing: var(--tracking-wider);
+    letter-spacing: 0.15em;
     color: var(--text-muted);
-    font-weight: 600;
+    font-weight: 400;
     margin-bottom: var(--space-4);
-    padding-bottom: var(--space-2);
+    padding-bottom: var(--space-3);
     border-bottom: 1px solid var(--border-light);
 }
 
@@ -515,40 +473,71 @@ body {
 }
 
 .toc-list li {
-    margin-bottom: var(--space-1);
+    margin: 0;
+    padding: 0;
+    line-height: 1;
 }
 
+/* Base link styling — refined editorial */
 .toc-list a {
     display: block;
-    font-size: var(--text-sm);
+    font-family: var(--font-body);
+    font-size: 0.8rem;
     color: var(--text-tertiary);
     text-decoration: none;
     background: none;
-    padding: var(--space-1) var(--space-2);
-    border-radius: 4px;
-    transition: all 0.2s ease;
-    line-height: var(--leading-snug);
+    padding: 0.4em 0;
+    border-radius: 0;
+    transition: color 0.2s ease;
+    line-height: 1.35;
+    border-left: 2px solid transparent;
+    padding-left: 0.75em;
+    margin-left: 0;
 }
 
 .toc-list a:hover {
     color: var(--text-primary);
-    background: var(--bg-secondary);
+    background: none;
 }
 
 .toc-list a.active {
-    color: var(--toc-active);
-    background: var(--accent-subtle);
+    color: var(--text-primary);
+    background: none;
+    font-weight: 400;
+    border-left-color: var(--text-tertiary);
+}
+
+/* H2 — Primary sections */
+.toc-list .toc-h2 {
+    font-size: 0.8rem;
     font-weight: 500;
+    color: var(--text-secondary);
+    padding-top: 0.6em;
+    padding-bottom: 0.4em;
 }
 
+.toc-list .toc-h2.active {
+    color: var(--text-primary);
+}
+
+/* H3 — Subsections */
 .toc-list .toc-h3 {
-    padding-left: var(--space-4);
-    font-size: var(--text-xs);
+    font-size: 0.75rem;
+    font-weight: 400;
+    color: var(--text-tertiary);
+    padding-left: 1.25em;
+    padding-top: 0.35em;
+    padding-bottom: 0.35em;
 }
 
+/* H4 — Deep nesting */
 .toc-list .toc-h4 {
-    padding-left: var(--space-6);
-    font-size: var(--text-xs);
+    font-size: 0.7rem;
+    font-weight: 400;
+    color: var(--text-muted);
+    padding-left: 2em;
+    padding-top: 0.3em;
+    padding-bottom: 0.3em;
 }
 
 /* Hide TOC on smaller screens */
@@ -558,9 +547,9 @@ body {
     }
 }
 
-/* Scrollbar styling for TOC */
+/* Scrollbar styling for TOC — minimal */
 .toc::-webkit-scrollbar {
-    width: 4px;
+    width: 3px;
 }
 
 .toc::-webkit-scrollbar-track {
@@ -568,8 +557,8 @@ body {
 }
 
 .toc::-webkit-scrollbar-thumb {
-    background: var(--scrollbar-thumb);
-    border-radius: 2px;
+    background: var(--border-medium);
+    border-radius: 0;
 }
 
 /* =========================================================================
@@ -618,7 +607,6 @@ body {
 .drag-overlay-content span {
     font-family: var(--font-body);
     font-size: var(--text-xl);
-    font-style: italic;
 }
 
 /* =========================================================================
@@ -653,7 +641,6 @@ body {
    ========================================================================== */
 @media (max-width: 768px) {
     .theme-toggle,
-    .font-toggle,
     .export-btn {
         width: 40px;
         height: 40px;
@@ -664,12 +651,8 @@ body {
         right: var(--space-4);
     }
 
-    .font-toggle {
-        right: calc(var(--space-4) + 48px);
-    }
-
     .export-btn {
-        right: calc(var(--space-4) + 96px);
+        right: calc(var(--space-4) + 48px);
     }
 
     .landing {

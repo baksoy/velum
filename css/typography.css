@@ -4,10 +4,10 @@
    ========================================================================== */
 
 /* Font Stack Definitions */
-/* Default: Font A - Playfair Display + Lora (Classic editorial) */
+/* Practical Typography style: Spectral (modern oldstyle, screen-optimized) */
 :root {
-    --font-heading: 'Playfair Display', Georgia, 'Times New Roman', serif;
-    --font-body: 'Lora', Georgia, 'Times New Roman', serif;
+    --font-heading: 'Spectral', Georgia, 'Times New Roman', serif;
+    --font-body: 'Spectral', Georgia, 'Times New Roman', serif;
     --font-mono: 'JetBrains Mono', 'Fira Code', 'SF Mono', Consolas, monospace;
 
     /* Typographic Scale - 1.25 (Major Third) */
@@ -51,26 +51,21 @@
     --content-width-wide: 56rem;
 }
 
-/* Font B - Libre Baskerville + Merriweather (Book typography) */
-[data-font="b"] {
-    --font-heading: 'Libre Baskerville', Georgia, 'Times New Roman', serif;
-    --font-body: 'Merriweather', Georgia, 'Times New Roman', serif;
-}
 
 /* Base Typography */
 html {
-    font-size: 16px;
+    font-size: 18px;
 }
 
 @media (min-width: 640px) {
     html {
-        font-size: 18px;
+        font-size: 20px;
     }
 }
 
 @media (min-width: 1024px) {
     html {
-        font-size: 19px;
+        font-size: 21px;
     }
 }
 
@@ -78,7 +73,7 @@ body {
     font-family: var(--font-body);
     font-size: var(--text-base);
     font-weight: 400;
-    line-height: var(--leading-relaxed);
+    line-height: var(--leading-normal);  /* Tighter: 1.5 instead of 1.6 */
     color: var(--text-primary);
     font-feature-settings: 'kern' 1, 'liga' 1, 'calt' 1, 'onum' 1;
     text-rendering: optimizeLegibility;
@@ -99,56 +94,72 @@ h1, h2, h3, h4, h5, h6 {
     text-wrap: balance;
 }
 
+/* Headings with rule above (Practical Typography style) */
+.content h1,
+.content h2 {
+    font-style: italic;
+    font-weight: 400;
+    position: relative;
+    padding-top: var(--space-6);
+}
+
+.content h1::before,
+.content h2::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background: var(--border-medium);
+}
+
 .content h1 {
-    font-size: var(--text-4xl);
+    font-size: var(--text-3xl);
     margin-top: var(--space-16);
     margin-bottom: var(--space-8);
-    font-style: italic;
 }
 
 .content h2 {
-    font-size: var(--text-3xl);
+    font-size: var(--text-2xl);
     margin-top: var(--space-12);
     margin-bottom: var(--space-6);
-    padding-bottom: var(--space-3);
-    border-bottom: 1px solid var(--border-light);
 }
 
 .content h3 {
-    font-size: var(--text-2xl);
+    font-size: var(--text-xl);
     margin-top: var(--space-10);
     margin-bottom: var(--space-5);
+    font-style: italic;
+    font-weight: 400;
 }
 
 .content h4 {
-    font-size: var(--text-xl);
+    font-size: var(--text-lg);
     margin-top: var(--space-8);
     margin-bottom: var(--space-4);
     font-style: italic;
+    font-weight: 400;
 }
 
 .content h5 {
-    font-size: var(--text-lg);
+    font-size: var(--text-base);
     margin-top: var(--space-6);
     margin-bottom: var(--space-3);
-    text-transform: uppercase;
-    letter-spacing: var(--tracking-wider);
-    font-family: var(--font-body);
-    font-weight: 600;
+    font-style: italic;
+    font-weight: 400;
 }
 
 .content h6 {
     font-size: var(--text-base);
     margin-top: var(--space-6);
     margin-bottom: var(--space-3);
-    text-transform: uppercase;
-    letter-spacing: var(--tracking-wider);
-    font-family: var(--font-body);
-    font-weight: 600;
+    font-style: italic;
+    font-weight: 400;
     color: var(--text-secondary);
 }
 
-/* Paragraphs */
+/* Paragraphs - justified with hyphenation (Practical Typography style) */
 p {
     margin-top: 0;
     margin-bottom: var(--space-6);
@@ -156,27 +167,31 @@ p {
     widows: 3;
 }
 
-/* Lead paragraph */
-.content > p:first-of-type {
-    font-size: var(--text-lg);
-    line-height: var(--leading-loose);
-    color: var(--text-secondary);
+.content p {
+    text-align: justify;
+    hyphens: auto;
+    -webkit-hyphens: auto;
 }
 
-/* Links */
+/* Lead paragraph - bold (Practical Typography style) */
+.content > p:first-of-type {
+    font-size: var(--text-base);
+    line-height: var(--leading-normal);
+    color: var(--text-primary);
+    font-weight: 600;
+}
+
+/* Links - simple underline (Butterick style) */
 a {
-    color: var(--link);
-    text-decoration: none;
-    background-image: linear-gradient(var(--link-underline), var(--link-underline));
-    background-size: 100% 1px;
-    background-position: 0 100%;
-    background-repeat: no-repeat;
-    transition: color 0.2s ease, background-size 0.2s ease;
+    color: var(--text-primary);
+    text-decoration: underline;
+    text-decoration-color: var(--text-tertiary);
+    text-underline-offset: 2px;
+    transition: text-decoration-color 0.2s ease;
 }
 
 a:hover {
-    color: var(--link-hover);
-    background-size: 100% 2px;
+    text-decoration-color: var(--text-primary);
 }
 
 a:focus {
@@ -235,33 +250,20 @@ sub {
     bottom: -0.25em;
 }
 
-/* Horizontal Rule */
+/* Horizontal Rule - simple thin line (Butterick style) */
 hr {
     border: none;
     height: 1px;
     background: var(--border-light);
-    margin: var(--space-12) auto;
-    max-width: 6rem;
-    position: relative;
+    margin: var(--space-12) 0;
+    max-width: 100%;
 }
 
-hr::before {
-    content: '◆';
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    background: var(--bg-primary);
-    padding: 0 var(--space-4);
-    color: var(--text-muted);
-    font-size: var(--text-sm);
-}
-
-/* Lists — Monocle-tight spacing */
+/* Lists — generous indentation (Practical Typography style) */
 ul, ol {
     margin-top: 0;
     margin-bottom: var(--space-6);
-    padding-left: var(--space-5);
+    padding-left: var(--space-12);  /* 3rem - generous indent for bullet */
 }
 
 ul ul, ul ol,
@@ -271,29 +273,31 @@ ol ul, ol ol {
 }
 
 li {
-    margin-bottom: var(--space-1);
-    line-height: var(--leading-snug);
+    margin-bottom: 0;
+    padding-left: var(--space-2);
+    line-height: var(--leading-tight);  /* 1.2 - tight */
 }
 
 li:last-child {
     margin-bottom: 0;
 }
 
+/* List markers - plain (Butterick style) */
 li::marker {
-    color: var(--accent);
+    color: var(--text-secondary);
 }
 
 ul > li::marker {
-    content: '•  ';
-    font-size: 1.2em;
+    content: '• ';
+    font-size: 1em;
 }
 
 ul ul > li::marker {
-    content: '◦  ';
+    content: '◦ ';
 }
 
 ul ul ul > li::marker {
-    content: '▪  ';
+    content: '▪ ';
 }
 
 /* Task Lists / Checkboxes */
@@ -353,28 +357,14 @@ dd {
     color: var(--text-secondary);
 }
 
-/* Blockquotes */
+/* Blockquotes - minimal (Butterick style) */
 blockquote {
-    margin: var(--space-8) 0;
-    padding: var(--space-6) var(--space-8);
-    background: var(--blockquote-bg);
-    border-left: 4px solid var(--blockquote-border);
-    border-radius: 0 8px 8px 0;
-    font-style: italic;
-    color: var(--text-secondary);
-    position: relative;
-}
-
-blockquote::before {
-    content: '"';
-    position: absolute;
-    left: var(--space-4);
-    top: var(--space-2);
-    font-family: var(--font-heading);
-    font-size: var(--text-4xl);
-    color: var(--accent);
-    opacity: 0.3;
-    line-height: 1;
+    margin: var(--space-6) 0;
+    padding-left: var(--space-6);
+    border-left: 2px solid var(--border-medium);
+    background: none;
+    font-style: normal;
+    color: var(--text-primary);
 }
 
 blockquote p {
