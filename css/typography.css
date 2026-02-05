@@ -171,6 +171,13 @@ p {
     text-align: justify;
     hyphens: auto;
     -webkit-hyphens: auto;
+    -webkit-hyphenate-limit-before: 3;
+    -webkit-hyphenate-limit-after: 3;
+    hyphenate-limit-chars: 6 3 3;
+    hyphenate-limit-lines: 2;
+    hyphenate-limit-last: always;
+    hyphenate-limit-zone: 8%;
+    word-spacing: -0.05em;  /* Tighten slightly for better justification */
 }
 
 /* Lead paragraph - bold (Practical Typography style) */
