@@ -87,9 +87,8 @@ The typographic scale follows a 1.25 (Major Third) ratio with comfortable line h
 
 Velum implements security best practices:
 
-- **Content Security Policy (CSP)** — Restricts script/style sources
+- **Content Security Policy (CSP)** — Restricts scripts/styles to trusted CDNs only
 - **DOMPurify** — Sanitizes all rendered HTML to prevent XSS
-- **Subresource Integrity (SRI)** — Verifies CDN resources haven't been tampered with
 - **Safe YAML parsing** — Prevents prototype pollution attacks
 - **HTML escaping** — Front matter values are escaped before display
 
