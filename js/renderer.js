@@ -82,6 +82,11 @@ const VelumRenderer = {
                 codeLang = language || 'plaintext';
             }
 
+            // Mermaid diagram support
+            if (codeLang === 'mermaid') {
+                return `<div class="mermaid">${VelumRenderer.escapeHtml(codeContent)}</div>`;
+            }
+
             const validLang = hljs.getLanguage(codeLang) ? codeLang : 'plaintext';
             let highlighted;
 
@@ -103,7 +108,7 @@ const VelumRenderer = {
             </pre>`;
         };
 
-        // Enhanced images with figure wrapper for captions
+        // 2.8 Enhanced images with figure wrapper for captions
         renderer.image = function(href, title, text) {
             // Handle both old API (href, title, text) and new API (token object)
             let imgHref, imgTitle, imgText;
@@ -121,21 +126,37 @@ const VelumRenderer = {
             }
 
             const titleAttr = imgTitle ? ` title="${imgTitle}"` : '';
-            return `<img src="${imgHref}" alt="${imgText}"${titleAttr} loading="lazy">`;
+            const imgTag = `<img src="${imgHref}" alt="${imgText}"${titleAttr} loading="lazy">`;
+
+            // If there's a title, wrap in figure with figcaption
+            if (imgTitle) {
+                return `<figure>${imgTag}<figcaption>${VelumRenderer.escapeHtml(imgTitle)}</figcaption></figure>`;
+            }
+
+            return imgTag;
         };
 
-        // Enhanced blockquotes
+        // 1.7 Enhanced blockquotes with GFM alert detection
         renderer.blockquote = function(quote) {
             // Handle both old API (quote string) and new API (token object)
             let quoteContent;
 
             if (typeof quote === 'object' && quote !== null) {
                 // New API: quote is a token object with tokens array
-                // We need to parse the tokens back to HTML
                 quoteContent = this.parser ? this.parser.parse(quote.tokens) : quote.text || '';
             } else {
                 // Old API: quote is already HTML string
                 quoteContent = quote;
+            }
+
+            // Detect GFM alert syntax
+            const alertRegex = /^\s*<p>\s*\[!(NOTE|TIP|WARNING|IMPORTANT|CAUTION)\]\s*/i;
+            const match = quoteContent.match(alertRegex);
+
+            if (match) {
+                const alertType = match[1].toLowerCase();
+                const cleanContent = quoteContent.replace(alertRegex, '<p>');
+                return `<blockquote class="alert-${alertType}"><div class="alert-title">${match[1]}</div>${cleanContent}</blockquote>`;
             }
 
             return `<blockquote>${quoteContent}</blockquote>`;
@@ -243,12 +264,24 @@ const VelumRenderer = {
     },
 
     /**
-     * Setup copy buttons for code blocks
+     * Setup copy buttons for code blocks with ripple effect (1.9)
      */
     setupCopyButtons() {
         document.querySelectorAll('.code-copy-btn').forEach(btn => {
             btn.addEventListener('click', async (e) => {
                 e.preventDefault();
+
+                // 1.9 Ripple effect
+                const ripple = document.createElement('span');
+                ripple.className = 'ripple';
+                const rect = btn.getBoundingClientRect();
+                const size = Math.max(rect.width, rect.height) * 2;
+                ripple.style.width = ripple.style.height = size + 'px';
+                ripple.style.left = (e.clientX - rect.left - size / 2) + 'px';
+                ripple.style.top = (e.clientY - rect.top - size / 2) + 'px';
+                btn.appendChild(ripple);
+                ripple.addEventListener('animationend', () => ripple.remove(), { once: true });
+
                 const pre = btn.closest('pre');
                 const code = pre.querySelector('code');
                 const text = code.textContent;
@@ -281,6 +314,29 @@ const VelumRenderer = {
                     }, 2000);
                 }
             });
+        });
+    },
+
+    /**
+     * 1.8 Setup collapsible code blocks (auto-collapse > 15 lines)
+     */
+    setupCodeCollapse() {
+        document.querySelectorAll('pre code').forEach(code => {
+            const lineCount = code.textContent.split('\n').length;
+            if (lineCount <= 15) return;
+
+            const pre = code.closest('pre');
+            pre.classList.add('code-collapsed');
+
+            const btn = document.createElement('button');
+            btn.className = 'code-expand-btn';
+            btn.textContent = `Show all ${lineCount} lines`;
+            btn.addEventListener('click', () => {
+                const isCollapsed = pre.classList.toggle('code-collapsed');
+                btn.textContent = isCollapsed ? `Show all ${lineCount} lines` : 'Collapse';
+            });
+
+            pre.appendChild(btn);
         });
     },
 

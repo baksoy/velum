@@ -1,6 +1,6 @@
 /* ==========================================================================
    Velum Table of Contents
-   Auto-generated floating TOC with scroll spy
+   Auto-generated floating TOC with scroll spy + mobile bottom sheet (2.4)
    ========================================================================== */
 
 const VelumTOC = {
@@ -9,6 +9,7 @@ const VelumTOC = {
     toc: null,
     activeId: null,
     observer: null,
+    mobileOpen: false,
 
     /**
      * Initialize the table of contents
@@ -16,6 +17,77 @@ const VelumTOC = {
     init() {
         this.toc = document.getElementById('toc');
         this.tocList = document.getElementById('toc-list');
+        this.mobileTrigger = document.getElementById('toc-mobile-trigger');
+        this.mobileBackdrop = document.getElementById('toc-mobile-backdrop');
+
+        this.setupMobile();
+    },
+
+    /**
+     * Setup mobile bottom sheet interactions
+     */
+    setupMobile() {
+        if (!this.mobileTrigger) return;
+
+        this.mobileTrigger.addEventListener('click', () => {
+            this.toggleMobileSheet();
+        });
+
+        if (this.mobileBackdrop) {
+            this.mobileBackdrop.addEventListener('click', () => {
+                this.closeMobileSheet();
+            });
+        }
+    },
+
+    /**
+     * Toggle mobile bottom sheet
+     */
+    toggleMobileSheet() {
+        if (this.mobileOpen) {
+            this.closeMobileSheet();
+        } else {
+            this.openMobileSheet();
+        }
+    },
+
+    /**
+     * Open mobile bottom sheet
+     */
+    openMobileSheet() {
+        if (!this.toc || window.innerWidth > 1200) return;
+
+        this.mobileOpen = true;
+        this.toc.classList.add('mobile-sheet');
+
+        // Force reflow before adding open class for animation
+        this.toc.offsetHeight;
+        this.toc.classList.add('open');
+
+        if (this.mobileBackdrop) {
+            this.mobileBackdrop.classList.add('active');
+        }
+    },
+
+    /**
+     * Close mobile bottom sheet
+     */
+    closeMobileSheet() {
+        if (!this.toc) return;
+
+        this.mobileOpen = false;
+        this.toc.classList.remove('open');
+
+        if (this.mobileBackdrop) {
+            this.mobileBackdrop.classList.remove('active');
+        }
+
+        // Remove mobile-sheet class after transition
+        setTimeout(() => {
+            if (!this.mobileOpen) {
+                this.toc.classList.remove('mobile-sheet');
+            }
+        }, 400);
     },
 
     /**
@@ -59,6 +131,10 @@ const VelumTOC = {
             a.addEventListener('click', (e) => {
                 e.preventDefault();
                 this.scrollToHeading(id);
+                // Close mobile sheet when clicking a link
+                if (this.mobileOpen) {
+                    this.closeMobileSheet();
+                }
             });
 
             li.appendChild(a);
@@ -149,11 +225,15 @@ const VelumTOC = {
     },
 
     /**
-     * Show the TOC
+     * Show the TOC (and mobile trigger on small screens)
      */
     show() {
         if (this.toc) {
             this.toc.classList.add('visible');
+        }
+        // Show mobile trigger on small screens
+        if (this.mobileTrigger) {
+            this.mobileTrigger.classList.add('visible');
         }
     },
 
@@ -163,6 +243,9 @@ const VelumTOC = {
     hide() {
         if (this.toc) {
             this.toc.classList.remove('visible');
+        }
+        if (this.mobileTrigger) {
+            this.mobileTrigger.classList.remove('visible');
         }
         if (this.observer) {
             this.observer.disconnect();
@@ -174,6 +257,7 @@ const VelumTOC = {
      */
     destroy() {
         this.hide();
+        this.closeMobileSheet();
         if (this.tocList) {
             this.tocList.innerHTML = '';
         }

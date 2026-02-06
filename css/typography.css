@@ -428,3 +428,80 @@ figcaption {
     margin-top: var(--space-3);
     font-style: italic;
 }
+
+/* =========================================================================
+   1.7 GFM Alert Blockquotes
+   ========================================================================== */
+blockquote.alert-note,
+blockquote.alert-tip,
+blockquote.alert-warning,
+blockquote.alert-important,
+blockquote.alert-caution {
+    border-left-width: 3px;
+    padding: var(--space-5) var(--space-6);
+    border-radius: 0 8px 8px 0;
+    position: relative;
+    font-style: normal;
+}
+
+blockquote.alert-note .alert-title,
+blockquote.alert-tip .alert-title,
+blockquote.alert-warning .alert-title,
+blockquote.alert-important .alert-title,
+blockquote.alert-caution .alert-title {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-weight: 600;
+    font-size: var(--text-sm);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-wide);
+    margin-bottom: var(--space-3);
+}
+
+/* Note - Blue */
+blockquote.alert-note {
+    border-left-color: #3B82F6;
+    background: rgba(59, 130, 246, 0.06);
+}
+blockquote.alert-note .alert-title { color: #3B82F6; }
+blockquote.alert-note .alert-title::before { content: '\2139\FE0F'; }
+
+/* Tip - Green */
+blockquote.alert-tip {
+    border-left-color: #10B981;
+    background: rgba(16, 185, 129, 0.06);
+}
+blockquote.alert-tip .alert-title { color: #10B981; }
+blockquote.alert-tip .alert-title::before { content: '\1F4A1'; }
+
+/* Warning - Yellow/Amber */
+blockquote.alert-warning {
+    border-left-color: #F59E0B;
+    background: rgba(245, 158, 11, 0.06);
+}
+blockquote.alert-warning .alert-title { color: #D97706; }
+blockquote.alert-warning .alert-title::before { content: '\26A0\FE0F'; }
+
+/* Important - Purple */
+blockquote.alert-important {
+    border-left-color: #8B5CF6;
+    background: rgba(139, 92, 246, 0.06);
+}
+blockquote.alert-important .alert-title { color: #8B5CF6; }
+blockquote.alert-important .alert-title::before { content: '\2757'; }
+
+/* Caution - Red */
+blockquote.alert-caution {
+    border-left-color: #EF4444;
+    background: rgba(239, 68, 68, 0.06);
+}
+blockquote.alert-caution .alert-title { color: #EF4444; }
+blockquote.alert-caution .alert-title::before { content: '\1F6D1'; }
+
+/* Dark mode adjustments */
+[data-theme="dark"] blockquote.alert-note { background: rgba(59, 130, 246, 0.08); }
+[data-theme="dark"] blockquote.alert-tip { background: rgba(16, 185, 129, 0.08); }
+[data-theme="dark"] blockquote.alert-warning { background: rgba(245, 158, 11, 0.08); }
+[data-theme="dark"] blockquote.alert-important { background: rgba(139, 92, 246, 0.08); }
+[data-theme="dark"] blockquote.alert-caution { background: rgba(239, 68, 68, 0.08); }

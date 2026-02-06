@@ -97,7 +97,7 @@ const VelumDragDrop = {
                 if (this.isMarkdownFile(file)) {
                     this.handleFile(file);
                 } else {
-                    this.showError('Please drop a Markdown file (.md, .markdown, or .txt)');
+                    Velum.showToast('Please drop a Markdown file (.md, .markdown, or .txt)');
                 }
             }
         });
@@ -156,7 +156,7 @@ const VelumDragDrop = {
             Velum.renderContent(content, file.name);
         } catch (error) {
             console.error('Error reading file:', error);
-            this.showError('Failed to read file. Please try again.');
+            Velum.showToast('Failed to read file. Please try again.');
         }
     },
 
@@ -190,14 +190,5 @@ const VelumDragDrop = {
         if (this.overlay) {
             this.overlay.classList.remove('active');
         }
-    },
-
-    /**
-     * Show error message (simple alert for now)
-     * @param {string} message - Error message
-     */
-    showError(message) {
-        // Could be enhanced with a toast notification
-        alert(message);
     }
 };
