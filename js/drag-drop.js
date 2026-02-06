@@ -21,6 +21,7 @@ const VelumDragDrop = {
         this.setupFileInput();
         this.setupGlobalDragDrop();
         this.setupKeyboardShortcuts();
+        this.setupPasteHandler();
     },
 
     /**
@@ -113,6 +114,30 @@ const VelumDragDrop = {
                 e.preventDefault();
                 this.fileInput.click();
             }
+        });
+    },
+
+    /**
+     * Setup global paste handler for clipboard markdown
+     */
+    setupPasteHandler() {
+        document.addEventListener('paste', (e) => {
+            // Skip if pasting into an input or textarea
+            const tag = e.target.tagName;
+            if (tag === 'INPUT' || tag === 'TEXTAREA' || e.target.isContentEditable) return;
+
+            const text = e.clipboardData.getData('text/plain');
+            if (!text || text.trim().length < 3) return;
+
+            e.preventDefault();
+
+            // Save to localStorage (matching existing pattern)
+            localStorage.setItem('velum-content', text);
+            localStorage.setItem('velum-filename', 'Pasted Document');
+
+            // Render the content
+            Velum.renderContent(text, 'Pasted Document');
+            Velum.showToast('Pasted markdown rendered');
         });
     },
 
