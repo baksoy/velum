@@ -1,0 +1,1192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Velum Theme Atelier</title>
+<style>
+  /* ===== Reset & Base ===== */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ui-bg: #0c0e12;
+    --ui-surface: #14171d;
+    --ui-surface-2: #1b1f27;
+    --ui-surface-3: #22272f;
+    --ui-border: rgba(255,255,255,0.07);
+    --ui-border-hover: rgba(255,255,255,0.14);
+    --ui-text: #c8c4be;
+    --ui-text-bright: #eae6e0;
+    --ui-text-dim: #6b6860;
+    --ui-accent: #D4A574;
+    --ui-accent-dim: rgba(212,165,116,0.15);
+    --ui-radius: 8px;
+    --ui-transition: 0.2s ease;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    background: var(--ui-bg);
+    color: var(--ui-text);
+    font-size: 13px;
+    line-height: 1.5;
+    overflow: hidden;
+    height: 100vh;
+  }
+
+  /* ===== Layout ===== */
+  .atelier {
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    grid-template-rows: auto 1fr auto;
+    height: 100vh;
+  }
+
+  /* ===== Header ===== */
+  .header {
+    grid-column: 1 / -1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 20px;
+    border-bottom: 1px solid var(--ui-border);
+    background: var(--ui-surface);
+  }
+
+  .header-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .logo {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 20px;
+    font-style: italic;
+    color: var(--ui-accent);
+    letter-spacing: 0.02em;
+  }
+
+  .logo span {
+    font-style: normal;
+    color: var(--ui-text-dim);
+    font-size: 11px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    margin-left: 8px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  /* ===== Presets ===== */
+  .presets {
+    display: flex;
+    gap: 6px;
+  }
+
+  .preset-btn {
+    background: var(--ui-surface-2);
+    border: 1px solid var(--ui-border);
+    color: var(--ui-text);
+    padding: 5px 12px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.03em;
+    transition: all var(--ui-transition);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .preset-btn:hover { border-color: var(--ui-border-hover); background: var(--ui-surface-3); }
+  .preset-btn.active { border-color: var(--ui-accent); background: var(--ui-accent-dim); color: var(--ui-accent); }
+
+  .preset-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  /* ===== Controls Panel ===== */
+  .controls {
+    background: var(--ui-surface);
+    border-right: 1px solid var(--ui-border);
+    overflow-y: auto;
+    padding: 0;
+  }
+
+  .controls::-webkit-scrollbar { width: 4px; }
+  .controls::-webkit-scrollbar-track { background: transparent; }
+  .controls::-webkit-scrollbar-thumb { background: var(--ui-border); border-radius: 2px; }
+
+  .control-group {
+    border-bottom: 1px solid var(--ui-border);
+  }
+
+  .control-group-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    cursor: pointer;
+    user-select: none;
+    transition: background var(--ui-transition);
+  }
+
+  .control-group-header:hover { background: var(--ui-surface-2); }
+
+  .control-group-title {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--ui-text-dim);
+  }
+
+  .control-group-chevron {
+    color: var(--ui-text-dim);
+    font-size: 10px;
+    transition: transform var(--ui-transition);
+  }
+
+  .control-group.collapsed .control-group-chevron { transform: rotate(-90deg); }
+  .control-group.collapsed .control-group-body { display: none; }
+
+  .control-group-body {
+    padding: 4px 16px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  /* ===== Control Items ===== */
+  .control-item {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .control-label {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .control-label span:first-child {
+    font-size: 11.5px;
+    color: var(--ui-text);
+    font-weight: 500;
+  }
+
+  .control-value {
+    font-size: 11px;
+    color: var(--ui-accent);
+    font-family: 'SF Mono', 'Fira Code', 'JetBrains Mono', monospace;
+    font-weight: 500;
+  }
+
+  /* Color input */
+  .color-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .color-swatch {
+    width: 32px;
+    height: 24px;
+    border-radius: 4px;
+    border: 1px solid var(--ui-border);
+    cursor: pointer;
+    padding: 0;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+
+  .color-swatch input[type="color"] {
+    width: 48px;
+    height: 40px;
+    border: none;
+    cursor: pointer;
+    margin: -8px;
+  }
+
+  .color-hex {
+    background: var(--ui-surface-2);
+    border: 1px solid var(--ui-border);
+    border-radius: 4px;
+    color: var(--ui-text);
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    font-size: 11px;
+    padding: 4px 8px;
+    width: 80px;
+    outline: none;
+    transition: border-color var(--ui-transition);
+  }
+
+  .color-hex:focus { border-color: var(--ui-accent); }
+
+  /* Slider */
+  input[type="range"] {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 4px;
+    border-radius: 2px;
+    background: var(--ui-surface-3);
+    outline: none;
+  }
+
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--ui-accent);
+    cursor: pointer;
+    border: 2px solid var(--ui-bg);
+    transition: transform var(--ui-transition);
+  }
+
+  input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.2); }
+
+  /* Select */
+  select {
+    background: var(--ui-surface-2);
+    border: 1px solid var(--ui-border);
+    border-radius: 4px;
+    color: var(--ui-text);
+    font-size: 11.5px;
+    padding: 6px 8px;
+    outline: none;
+    cursor: pointer;
+    transition: border-color var(--ui-transition);
+    width: 100%;
+  }
+
+  select:focus { border-color: var(--ui-accent); }
+
+  /* ===== Mode Toggle ===== */
+  .mode-toggle {
+    display: flex;
+    background: var(--ui-surface-2);
+    border-radius: 6px;
+    padding: 2px;
+    border: 1px solid var(--ui-border);
+  }
+
+  .mode-btn {
+    flex: 1;
+    padding: 6px 0;
+    text-align: center;
+    font-size: 11px;
+    font-weight: 500;
+    border-radius: 4px;
+    cursor: pointer;
+    color: var(--ui-text-dim);
+    transition: all var(--ui-transition);
+    border: none;
+    background: none;
+  }
+
+  .mode-btn.active {
+    background: var(--ui-surface-3);
+    color: var(--ui-text-bright);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+  }
+
+  /* ===== Preview ===== */
+  .preview-area {
+    position: relative;
+    overflow: hidden;
+    display: flex;
+  }
+
+  .preview-pane {
+    flex: 1;
+    overflow-y: auto;
+    padding: 40px;
+    transition: background-color 0.4s ease;
+  }
+
+  .preview-pane::-webkit-scrollbar { width: 6px; }
+  .preview-pane::-webkit-scrollbar-track { background: transparent; }
+  .preview-pane::-webkit-scrollbar-thumb { background: rgba(128,128,128,0.2); border-radius: 3px; }
+
+  .preview-split { display: flex; width: 100%; height: 100%; }
+  .preview-split .preview-pane { flex: 1; }
+  .preview-split .preview-divider {
+    width: 1px;
+    background: var(--ui-border);
+    flex-shrink: 0;
+  }
+
+  .preview-label {
+    position: absolute;
+    top: 12px;
+    font-size: 9px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    padding: 3px 10px;
+    border-radius: 10px;
+    z-index: 2;
+    pointer-events: none;
+  }
+
+  .preview-label.light-label { left: 16px; }
+  .preview-label.dark-label { right: 16px; }
+
+  /* Velum content styles inside preview */
+  .velum-preview { max-width: 580px; margin: 0 auto; }
+
+  .velum-preview h1 {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-style: italic;
+    font-weight: 600;
+    line-height: 1.2;
+    margin-bottom: 8px;
+    padding-top: 16px;
+    border-top: 1px solid;
+    border-color: var(--p-border);
+  }
+
+  .velum-preview .meta {
+    font-size: 0.8em;
+    margin-bottom: 24px;
+    display: flex;
+    gap: 16px;
+  }
+
+  .velum-preview p {
+    font-family: Georgia, 'Times New Roman', serif;
+    line-height: 1.65;
+    margin-bottom: 16px;
+    text-align: justify;
+    hyphens: auto;
+    -webkit-hyphens: auto;
+  }
+
+  .velum-preview p:first-of-type::first-line {
+    font-weight: 600;
+  }
+
+  .velum-preview a {
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    transition: color 0.2s;
+  }
+
+  .velum-preview h2 {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-style: italic;
+    font-weight: 600;
+    margin-top: 32px;
+    margin-bottom: 12px;
+    padding-top: 12px;
+    border-top: 1px solid;
+    border-color: var(--p-border);
+    line-height: 1.25;
+  }
+
+  .velum-preview blockquote {
+    border-left: 3px solid;
+    padding: 12px 16px;
+    margin: 16px 0;
+    border-radius: 0 6px 6px 0;
+    font-style: italic;
+  }
+
+  .velum-preview blockquote p { margin-bottom: 0; }
+
+  .velum-preview pre {
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin: 16px 0;
+    overflow-x: auto;
+    font-size: 0.85em;
+    line-height: 1.6;
+  }
+
+  .velum-preview code {
+    font-family: 'SF Mono', 'Fira Code', 'JetBrains Mono', monospace;
+  }
+
+  .velum-preview p code {
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.88em;
+  }
+
+  .velum-preview ul {
+    font-family: Georgia, 'Times New Roman', serif;
+    padding-left: 1.5em;
+    margin-bottom: 16px;
+    line-height: 1.65;
+  }
+
+  .velum-preview li { margin-bottom: 4px; }
+  .velum-preview li::marker { color: var(--p-accent); }
+
+  .velum-preview table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0;
+    font-size: 0.9em;
+  }
+
+  .velum-preview th, .velum-preview td {
+    padding: 8px 12px;
+    text-align: left;
+    border-bottom: 1px solid;
+  }
+
+  .velum-preview th {
+    font-weight: 600;
+    font-size: 0.85em;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .velum-preview .alert-box {
+    padding: 12px 16px;
+    border-radius: 8px;
+    border-left: 4px solid;
+    margin: 16px 0;
+    font-size: 0.9em;
+  }
+
+  .velum-preview hr {
+    border: none;
+    border-top: 1px solid;
+    margin: 24px 0;
+  }
+
+  /* ===== Output ===== */
+  .output-area {
+    grid-column: 1 / -1;
+    border-top: 1px solid var(--ui-border);
+    background: var(--ui-surface);
+    display: flex;
+    flex-direction: column;
+    max-height: 220px;
+  }
+
+  .output-tabs {
+    display: flex;
+    border-bottom: 1px solid var(--ui-border);
+    padding: 0 16px;
+    gap: 0;
+  }
+
+  .output-tab {
+    padding: 8px 16px;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--ui-text-dim);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: all var(--ui-transition);
+    background: none;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+  }
+
+  .output-tab:hover { color: var(--ui-text); }
+  .output-tab.active { color: var(--ui-accent); border-bottom-color: var(--ui-accent); }
+
+  .output-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 12px 16px;
+    display: flex;
+    gap: 12px;
+  }
+
+  .output-content::-webkit-scrollbar { width: 4px; }
+  .output-content::-webkit-scrollbar-track { background: transparent; }
+  .output-content::-webkit-scrollbar-thumb { background: var(--ui-border); border-radius: 2px; }
+
+  .output-text {
+    flex: 1;
+    font-family: 'SF Mono', 'Fira Code', 'JetBrains Mono', monospace;
+    font-size: 11.5px;
+    line-height: 1.65;
+    color: var(--ui-text);
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+
+  .output-text.prompt-text {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    font-size: 12.5px;
+    line-height: 1.6;
+  }
+
+  .copy-btn {
+    align-self: flex-start;
+    background: var(--ui-surface-3);
+    border: 1px solid var(--ui-border);
+    color: var(--ui-text);
+    padding: 6px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 11px;
+    font-weight: 500;
+    white-space: nowrap;
+    transition: all var(--ui-transition);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    flex-shrink: 0;
+  }
+
+  .copy-btn:hover { border-color: var(--ui-accent); color: var(--ui-accent); }
+  .copy-btn.copied { background: var(--ui-accent-dim); border-color: var(--ui-accent); color: var(--ui-accent); }
+
+  .output-hidden { display: none; }
+
+  /* ===== View Toggle ===== */
+  .view-toggle {
+    display: flex;
+    gap: 4px;
+  }
+
+  .view-btn {
+    background: var(--ui-surface-2);
+    border: 1px solid var(--ui-border);
+    color: var(--ui-text-dim);
+    width: 30px;
+    height: 28px;
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    transition: all var(--ui-transition);
+  }
+
+  .view-btn:hover { border-color: var(--ui-border-hover); color: var(--ui-text); }
+  .view-btn.active { border-color: var(--ui-accent); color: var(--ui-accent); background: var(--ui-accent-dim); }
+
+  /* ===== Animations ===== */
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(4px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .control-group-body { animation: fadeIn 0.2s ease; }
+</style>
+</head>
+<body>
+<div class="atelier">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="header-left">
+      <div class="logo">Velum <span>Theme Atelier</span></div>
+      <div class="presets" id="presets"></div>
+    </div>
+    <div style="display:flex;align-items:center;gap:12px;">
+      <div class="view-toggle">
+        <button class="view-btn active" data-view="split" title="Split view">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="1" width="5" height="12" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="8" y="1" width="5" height="12" rx="1" stroke="currentColor" stroke-width="1.3"/></svg>
+        </button>
+        <button class="view-btn" data-view="light" title="Light only">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="3" stroke="currentColor" stroke-width="1.3"/><path d="M7 1.5v1M7 11.5v1M1.5 7h1M11.5 7h1M3.1 3.1l.7.7M10.2 10.2l.7.7M10.9 3.1l-.7.7M3.8 10.2l-.7.7" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/></svg>
+        </button>
+        <button class="view-btn" data-view="dark" title="Dark only">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M10.5 8.5a4.5 4.5 0 1 1-5-5 3.5 3.5 0 0 0 5 5z" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Controls -->
+  <div class="controls" id="controls"></div>
+
+  <!-- Preview -->
+  <div class="preview-area" id="previewArea"></div>
+
+  <!-- Output -->
+  <div class="output-area">
+    <div class="output-tabs">
+      <button class="output-tab active" data-tab="prompt">Prompt</button>
+      <button class="output-tab" data-tab="css">CSS Variables</button>
+    </div>
+    <div class="output-content">
+      <div class="output-text prompt-text" id="outputText"></div>
+      <button class="copy-btn" id="copyBtn" onclick="copyOutput()">
+        <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><rect x="5" y="5" width="9" height="9" rx="1.5" stroke="currentColor" stroke-width="1.5"/><path d="M11 5V3.5A1.5 1.5 0 009.5 2h-6A1.5 1.5 0 002 3.5v6A1.5 1.5 0 003.5 11H5" stroke="currentColor" stroke-width="1.5"/></svg>
+        Copy
+      </button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ===== PRESETS =====
+const PRESETS = {
+  parchment: {
+    name: 'Parchment', dot: '#B85C38',
+    light: { bgPrimary: '#FDFAF6', bgSecondary: '#F7F3ED', bgCode: '#F3EDE5', textPrimary: '#2d2d2d', textSecondary: '#4a4a4a', textMuted: '#8b8b8b', accent: '#B85C38', link: '#2D5A7B' },
+    dark: { bgPrimary: '#0F1419', bgSecondary: '#1A2029', bgCode: '#1A2029', textPrimary: '#E8E4DF', textSecondary: '#B8B4AF', textMuted: '#5C5854', accent: '#D4A574', link: '#7DAFCB' },
+    typo: { scale: 1.25, baseSize: 18, lineHeight: 1.65, headingWeight: 600, bodyWeight: 400 }
+  },
+  midnight: {
+    name: 'Midnight', dot: '#7C8CFF',
+    light: { bgPrimary: '#F5F6FA', bgSecondary: '#ECEEF5', bgCode: '#E8EAF2', textPrimary: '#1a1d2e', textSecondary: '#3d4055', textMuted: '#8586a0', accent: '#4F5BD5', link: '#4F5BD5' },
+    dark: { bgPrimary: '#0D0F18', bgSecondary: '#151829', bgCode: '#151829', textPrimary: '#D5D7E8', textSecondary: '#9B9DBB', textMuted: '#4E5070', accent: '#7C8CFF', link: '#8B9AFF' },
+    typo: { scale: 1.25, baseSize: 17, lineHeight: 1.7, headingWeight: 700, bodyWeight: 400 }
+  },
+  forest: {
+    name: 'Forest', dot: '#4A8C5C',
+    light: { bgPrimary: '#F7FAF5', bgSecondary: '#EDF2E8', bgCode: '#E8EDE2', textPrimary: '#1E2B1A', textSecondary: '#3D4F35', textMuted: '#7A8C72', accent: '#4A8C5C', link: '#2D6B4A' },
+    dark: { bgPrimary: '#0E140F', bgSecondary: '#162018', bgCode: '#162018', textPrimary: '#D4DFD0', textSecondary: '#9BAF93', textMuted: '#4D5E46', accent: '#6BBF80', link: '#7DCBA0' },
+    typo: { scale: 1.2, baseSize: 18, lineHeight: 1.7, headingWeight: 600, bodyWeight: 400 }
+  },
+  rosewood: {
+    name: 'Ros\u00e9', dot: '#C45B7A',
+    light: { bgPrimary: '#FDF7F8', bgSecondary: '#F8EEF0', bgCode: '#F3E7EA', textPrimary: '#2A1E22', textSecondary: '#503842', textMuted: '#9A7882', accent: '#C45B7A', link: '#8B3A5E' },
+    dark: { bgPrimary: '#16090E', bgSecondary: '#20111A', bgCode: '#20111A', textPrimary: '#E8D8DE', textSecondary: '#B8A0A9', textMuted: '#6B4F5A', accent: '#E88DA6', link: '#D49AB0' },
+    typo: { scale: 1.25, baseSize: 18, lineHeight: 1.65, headingWeight: 600, bodyWeight: 400 }
+  },
+  brutalist: {
+    name: 'Brutalist', dot: '#FF4D00',
+    light: { bgPrimary: '#FFFFFF', bgSecondary: '#F0F0F0', bgCode: '#E8E8E8', textPrimary: '#000000', textSecondary: '#333333', textMuted: '#888888', accent: '#FF4D00', link: '#0000EE' },
+    dark: { bgPrimary: '#000000', bgSecondary: '#111111', bgCode: '#111111', textPrimary: '#FFFFFF', textSecondary: '#CCCCCC', textMuted: '#666666', accent: '#FF4D00', link: '#66B3FF' },
+    typo: { scale: 1.333, baseSize: 16, lineHeight: 1.55, headingWeight: 900, bodyWeight: 400 }
+  }
+};
+
+const DEFAULTS = PRESETS.parchment;
+
+// ===== STATE =====
+let state = JSON.parse(JSON.stringify(DEFAULTS));
+let activePreset = 'parchment';
+let activeView = 'split';
+let activeTab = 'prompt';
+
+// ===== INIT =====
+function init() {
+  buildPresets();
+  buildControls();
+  buildViewToggle();
+  buildOutputTabs();
+  updateAll();
+}
+
+// ===== PRESETS =====
+function buildPresets() {
+  const container = document.getElementById('presets');
+  container.innerHTML = '';
+  for (const [key, p] of Object.entries(PRESETS)) {
+    const btn = document.createElement('button');
+    btn.className = 'preset-btn' + (key === activePreset ? ' active' : '');
+    btn.innerHTML = `<span class="preset-dot" style="background:${p.dot}"></span>${p.name}`;
+    btn.onclick = () => applyPreset(key);
+    container.appendChild(btn);
+  }
+}
+
+function applyPreset(key) {
+  activePreset = key;
+  state = JSON.parse(JSON.stringify(PRESETS[key]));
+  buildControls();
+  buildPresets();
+  updateAll();
+}
+
+// ===== CONTROLS =====
+function buildControls() {
+  const container = document.getElementById('controls');
+  container.innerHTML = '';
+
+  const groups = [
+    { title: 'Light Mode Colors', id: 'light-colors', controls: [
+      { type: 'color', key: 'light.bgPrimary', label: 'Background' },
+      { type: 'color', key: 'light.bgSecondary', label: 'Surface' },
+      { type: 'color', key: 'light.bgCode', label: 'Code Background' },
+      { type: 'color', key: 'light.textPrimary', label: 'Text' },
+      { type: 'color', key: 'light.textSecondary', label: 'Text Secondary' },
+      { type: 'color', key: 'light.textMuted', label: 'Text Muted' },
+      { type: 'color', key: 'light.accent', label: 'Accent' },
+      { type: 'color', key: 'light.link', label: 'Links' },
+    ]},
+    { title: 'Dark Mode Colors', id: 'dark-colors', controls: [
+      { type: 'color', key: 'dark.bgPrimary', label: 'Background' },
+      { type: 'color', key: 'dark.bgSecondary', label: 'Surface' },
+      { type: 'color', key: 'dark.bgCode', label: 'Code Background' },
+      { type: 'color', key: 'dark.textPrimary', label: 'Text' },
+      { type: 'color', key: 'dark.textSecondary', label: 'Text Secondary' },
+      { type: 'color', key: 'dark.textMuted', label: 'Text Muted' },
+      { type: 'color', key: 'dark.accent', label: 'Accent' },
+      { type: 'color', key: 'dark.link', label: 'Links' },
+    ]},
+    { title: 'Typography', id: 'typo', controls: [
+      { type: 'slider', key: 'typo.scale', label: 'Scale Ratio', min: 1.1, max: 1.5, step: 0.01, format: v => v.toFixed(2) },
+      { type: 'slider', key: 'typo.baseSize', label: 'Base Size', min: 14, max: 24, step: 1, format: v => v + 'px' },
+      { type: 'slider', key: 'typo.lineHeight', label: 'Body Line Height', min: 1.3, max: 2.0, step: 0.05, format: v => v.toFixed(2) },
+      { type: 'slider', key: 'typo.headingWeight', label: 'Heading Weight', min: 400, max: 900, step: 100, format: v => v },
+      { type: 'slider', key: 'typo.bodyWeight', label: 'Body Weight', min: 300, max: 600, step: 100, format: v => v },
+    ]},
+  ];
+
+  for (const group of groups) {
+    const div = document.createElement('div');
+    div.className = 'control-group';
+    div.innerHTML = `
+      <div class="control-group-header" onclick="this.parentElement.classList.toggle('collapsed')">
+        <span class="control-group-title">${group.title}</span>
+        <span class="control-group-chevron">&#9662;</span>
+      </div>
+      <div class="control-group-body" id="group-${group.id}"></div>
+    `;
+    container.appendChild(div);
+
+    const body = div.querySelector('.control-group-body');
+    for (const ctrl of group.controls) {
+      body.appendChild(buildControl(ctrl));
+    }
+  }
+}
+
+function getStateValue(key) {
+  const parts = key.split('.');
+  let v = state;
+  for (const p of parts) v = v[p];
+  return v;
+}
+
+function setStateValue(key, val) {
+  const parts = key.split('.');
+  let v = state;
+  for (let i = 0; i < parts.length - 1; i++) v = v[parts[i]];
+  v[parts[parts.length - 1]] = val;
+  activePreset = null;
+  document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
+  updateAll();
+}
+
+function buildControl(ctrl) {
+  const item = document.createElement('div');
+  item.className = 'control-item';
+  const val = getStateValue(ctrl.key);
+
+  if (ctrl.type === 'color') {
+    item.innerHTML = `
+      <div class="control-label"><span>${ctrl.label}</span></div>
+      <div class="color-row">
+        <div class="color-swatch" style="background:${val}">
+          <input type="color" value="${val}" data-key="${ctrl.key}">
+        </div>
+        <input type="text" class="color-hex" value="${val}" data-key="${ctrl.key}" spellcheck="false">
+      </div>
+    `;
+    const colorInput = item.querySelector('input[type="color"]');
+    const hexInput = item.querySelector('.color-hex');
+    const swatch = item.querySelector('.color-swatch');
+
+    colorInput.addEventListener('input', e => {
+      const v = e.target.value;
+      hexInput.value = v;
+      swatch.style.background = v;
+      setStateValue(ctrl.key, v);
+    });
+
+    hexInput.addEventListener('input', e => {
+      let v = e.target.value;
+      if (/^#[0-9a-fA-F]{6}$/.test(v)) {
+        colorInput.value = v;
+        swatch.style.background = v;
+        setStateValue(ctrl.key, v);
+      }
+    });
+  }
+
+  if (ctrl.type === 'slider') {
+    const fmt = ctrl.format || (v => v);
+    item.innerHTML = `
+      <div class="control-label"><span>${ctrl.label}</span><span class="control-value">${fmt(val)}</span></div>
+      <input type="range" min="${ctrl.min}" max="${ctrl.max}" step="${ctrl.step}" value="${val}" data-key="${ctrl.key}">
+    `;
+    const slider = item.querySelector('input[type="range"]');
+    const valueLabel = item.querySelector('.control-value');
+    slider.addEventListener('input', e => {
+      const v = parseFloat(e.target.value);
+      valueLabel.textContent = fmt(v);
+      setStateValue(ctrl.key, v);
+    });
+  }
+
+  return item;
+}
+
+// ===== VIEW TOGGLE =====
+function buildViewToggle() {
+  document.querySelectorAll('.view-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      activeView = btn.dataset.view;
+      updateAll();
+    });
+  });
+}
+
+// ===== OUTPUT TABS =====
+function buildOutputTabs() {
+  document.querySelectorAll('.output-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.output-tab').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      activeTab = tab.dataset.tab;
+      updateOutput();
+    });
+  });
+}
+
+// ===== UPDATE ALL =====
+function updateAll() {
+  renderPreview();
+  updateOutput();
+}
+
+// ===== PREVIEW RENDERING =====
+const SAMPLE_CONTENT = `
+<h1>The Craft of Typography</h1>
+<div class="meta">
+  <span>Eleanor Vance</span>
+  <span>February 2026</span>
+  <span>4 min read</span>
+</div>
+<p>Good typography is invisible. The reader should never notice the typeface, the leading, or the measure\u2014only the content. When every element serves the text, the page becomes a window rather than a wall. This is the principle that guides every decision in editorial design.</p>
+<h2>Choosing a Typeface</h2>
+<p>A typeface carries tone before a single word is read. Serif faces like <a href="#">Spectral</a> whisper of tradition and careful craft, while a geometric sans signals modernity. The best choice is the one that disappears, letting the words carry their own weight. Consider the <code>font-feature-settings</code> property for fine control.</p>
+<blockquote><p>Typography is the craft of endowing human language with a durable visual form, and thus with an independent existence.</p></blockquote>
+<pre><code>/* Velum typographic scale */
+:root {
+  --text-base: 1rem;
+  --text-lg:   calc(1rem * var(--scale));
+  --text-xl:   calc(1rem * var(--scale) * var(--scale));
+  --text-2xl:  calc(1rem * pow(var(--scale), 3));
+}</code></pre>
+<div class="alert-box">The best reading experience comes from a line length of 45\u201375 characters. Velum\u2019s content column is set to 42rem for this reason.</div>
+<h2>Vertical Rhythm</h2>
+<ul>
+  <li>Maintain consistent spacing between elements</li>
+  <li>Use a modular scale for heading sizes</li>
+  <li>Let line-height breathe\u2014aim for 1.5\u20131.7</li>
+</ul>
+<table>
+  <thead><tr><th>Scale</th><th>Ratio</th><th>Character</th></tr></thead>
+  <tbody>
+    <tr><td>Minor Third</td><td>1.200</td><td>Compact, efficient</td></tr>
+    <tr><td>Major Third</td><td>1.250</td><td>Balanced, editorial</td></tr>
+    <tr><td>Perfect Fourth</td><td>1.333</td><td>Bold, dramatic</td></tr>
+    <tr><td>Golden Ratio</td><td>1.618</td><td>Expansive, classical</td></tr>
+  </tbody>
+</table>
+<hr>
+<p>The details matter. Every pixel of whitespace, every gram of ink on the page\u2014it all adds up to either harmony or noise. Choose harmony.</p>
+`;
+
+function applyThemeVars(el, mode) {
+  const m = state[mode];
+  const t = state.typo;
+
+  el.style.setProperty('--p-bg', m.bgPrimary);
+  el.style.setProperty('--p-bg2', m.bgSecondary);
+  el.style.setProperty('--p-code-bg', m.bgCode);
+  el.style.setProperty('--p-text', m.textPrimary);
+  el.style.setProperty('--p-text2', m.textSecondary);
+  el.style.setProperty('--p-muted', m.textMuted);
+  el.style.setProperty('--p-accent', m.accent);
+  el.style.setProperty('--p-link', m.link);
+  el.style.setProperty('--p-border', mode === 'light' ? 'rgba(0,0,0,0.1)' : 'rgba(255,255,255,0.08)');
+  el.style.setProperty('--p-code-inline', mode === 'light'
+    ? hexToRgba(m.accent, 0.08)
+    : hexToRgba(m.accent, 0.1)
+  );
+
+  el.style.backgroundColor = m.bgPrimary;
+  el.style.color = m.textPrimary;
+  el.style.fontSize = t.baseSize + 'px';
+
+  // Apply to children
+  const content = el.querySelector('.velum-preview');
+  if (!content) return;
+
+  content.querySelectorAll('h1').forEach(e => {
+    e.style.color = m.textPrimary;
+    e.style.fontSize = (t.baseSize * Math.pow(t.scale, 3)) + 'px';
+    e.style.fontWeight = t.headingWeight;
+    e.style.borderColor = mode === 'light' ? 'rgba(0,0,0,0.1)' : 'rgba(255,255,255,0.08)';
+  });
+
+  content.querySelectorAll('h2').forEach(e => {
+    e.style.color = m.textPrimary;
+    e.style.fontSize = (t.baseSize * Math.pow(t.scale, 2)) + 'px';
+    e.style.fontWeight = t.headingWeight;
+    e.style.borderColor = mode === 'light' ? 'rgba(0,0,0,0.1)' : 'rgba(255,255,255,0.08)';
+  });
+
+  content.querySelectorAll('.meta').forEach(e => {
+    e.style.color = m.textMuted;
+  });
+
+  content.querySelectorAll('p').forEach(e => {
+    e.style.color = m.textPrimary;
+    e.style.lineHeight = t.lineHeight;
+    e.style.fontWeight = t.bodyWeight;
+    e.style.fontSize = t.baseSize + 'px';
+  });
+
+  content.querySelectorAll('a').forEach(e => {
+    e.style.color = m.link;
+  });
+
+  content.querySelectorAll('blockquote').forEach(e => {
+    e.style.borderLeftColor = m.accent;
+    e.style.background = hexToRgba(m.accent, 0.06);
+    e.style.color = m.textSecondary;
+  });
+
+  content.querySelectorAll('pre').forEach(e => {
+    e.style.background = m.bgCode;
+    e.style.color = m.textSecondary;
+    e.style.boxShadow = mode === 'light' ? '0 2px 8px rgba(0,0,0,0.04)' : '0 2px 8px rgba(0,0,0,0.3)';
+  });
+
+  content.querySelectorAll('p code').forEach(e => {
+    e.style.background = hexToRgba(m.accent, mode === 'light' ? 0.08 : 0.12);
+    e.style.color = m.textPrimary;
+  });
+
+  content.querySelectorAll('ul').forEach(e => {
+    e.style.color = m.textPrimary;
+    e.style.lineHeight = t.lineHeight;
+    e.style.fontWeight = t.bodyWeight;
+  });
+
+  content.querySelectorAll('.alert-box').forEach(e => {
+    e.style.background = hexToRgba(m.accent, 0.08);
+    e.style.borderLeftColor = m.accent;
+    e.style.color = m.textSecondary;
+  });
+
+  content.querySelectorAll('th').forEach(e => {
+    e.style.background = m.bgSecondary;
+    e.style.borderColor = mode === 'light' ? 'rgba(0,0,0,0.08)' : 'rgba(255,255,255,0.06)';
+    e.style.color = m.textSecondary;
+  });
+
+  content.querySelectorAll('td').forEach(e => {
+    e.style.borderColor = mode === 'light' ? 'rgba(0,0,0,0.06)' : 'rgba(255,255,255,0.04)';
+    e.style.color = m.textPrimary;
+  });
+
+  content.querySelectorAll('hr').forEach(e => {
+    e.style.borderColor = mode === 'light' ? 'rgba(0,0,0,0.08)' : 'rgba(255,255,255,0.06)';
+  });
+}
+
+function renderPreview() {
+  const area = document.getElementById('previewArea');
+
+  if (activeView === 'split') {
+    area.innerHTML = `
+      <div class="preview-split">
+        <div style="position:relative;flex:1;display:flex;flex-direction:column">
+          <div class="preview-label light-label" style="background:rgba(0,0,0,0.06);color:rgba(0,0,0,0.4)">Light</div>
+          <div class="preview-pane" id="lightPane"><div class="velum-preview">${SAMPLE_CONTENT}</div></div>
+        </div>
+        <div class="preview-divider"></div>
+        <div style="position:relative;flex:1;display:flex;flex-direction:column">
+          <div class="preview-label dark-label" style="background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.4)">Dark</div>
+          <div class="preview-pane" id="darkPane"><div class="velum-preview">${SAMPLE_CONTENT}</div></div>
+        </div>
+      </div>
+    `;
+    applyThemeVars(document.getElementById('lightPane'), 'light');
+    applyThemeVars(document.getElementById('darkPane'), 'dark');
+  } else {
+    const mode = activeView;
+    const labelStyle = mode === 'light'
+      ? 'background:rgba(0,0,0,0.06);color:rgba(0,0,0,0.4);left:16px'
+      : 'background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.4);right:16px';
+    area.innerHTML = `
+      <div style="position:relative;flex:1;display:flex;flex-direction:column;width:100%">
+        <div class="preview-label" style="${labelStyle}">${mode.charAt(0).toUpperCase() + mode.slice(1)}</div>
+        <div class="preview-pane" id="${mode}Pane"><div class="velum-preview">${SAMPLE_CONTENT}</div></div>
+      </div>
+    `;
+    applyThemeVars(document.getElementById(mode + 'Pane'), mode);
+  }
+}
+
+// ===== OUTPUT =====
+function updateOutput() {
+  const el = document.getElementById('outputText');
+  if (activeTab === 'prompt') {
+    el.className = 'output-text prompt-text';
+    el.textContent = generatePrompt();
+  } else {
+    el.className = 'output-text';
+    el.textContent = generateCSS();
+  }
+}
+
+function generatePrompt() {
+  const d = DEFAULTS;
+  const parts = [];
+
+  // Light mode changes
+  const lightChanges = [];
+  if (state.light.bgPrimary !== d.light.bgPrimary) lightChanges.push(`background ${state.light.bgPrimary}`);
+  if (state.light.textPrimary !== d.light.textPrimary) lightChanges.push(`text color ${state.light.textPrimary}`);
+  if (state.light.accent !== d.light.accent) lightChanges.push(`accent ${state.light.accent}`);
+  if (state.light.link !== d.light.link) lightChanges.push(`links ${state.light.link}`);
+  if (state.light.bgCode !== d.light.bgCode) lightChanges.push(`code background ${state.light.bgCode}`);
+  if (state.light.bgSecondary !== d.light.bgSecondary) lightChanges.push(`surface color ${state.light.bgSecondary}`);
+  if (state.light.textSecondary !== d.light.textSecondary) lightChanges.push(`secondary text ${state.light.textSecondary}`);
+  if (state.light.textMuted !== d.light.textMuted) lightChanges.push(`muted text ${state.light.textMuted}`);
+  if (lightChanges.length) parts.push(`For light mode, use ${lightChanges.join(', ')}.`);
+
+  // Dark mode changes
+  const darkChanges = [];
+  if (state.dark.bgPrimary !== d.dark.bgPrimary) darkChanges.push(`background ${state.dark.bgPrimary}`);
+  if (state.dark.textPrimary !== d.dark.textPrimary) darkChanges.push(`text color ${state.dark.textPrimary}`);
+  if (state.dark.accent !== d.dark.accent) darkChanges.push(`accent ${state.dark.accent}`);
+  if (state.dark.link !== d.dark.link) darkChanges.push(`links ${state.dark.link}`);
+  if (state.dark.bgCode !== d.dark.bgCode) darkChanges.push(`code background ${state.dark.bgCode}`);
+  if (state.dark.bgSecondary !== d.dark.bgSecondary) darkChanges.push(`surface color ${state.dark.bgSecondary}`);
+  if (state.dark.textSecondary !== d.dark.textSecondary) darkChanges.push(`secondary text ${state.dark.textSecondary}`);
+  if (state.dark.textMuted !== d.dark.textMuted) darkChanges.push(`muted text ${state.dark.textMuted}`);
+  if (darkChanges.length) parts.push(`For dark mode, use ${darkChanges.join(', ')}.`);
+
+  // Typography changes
+  const typoChanges = [];
+  if (state.typo.scale !== d.typo.scale) typoChanges.push(`a ${state.typo.scale.toFixed(2)} typographic scale ratio`);
+  if (state.typo.baseSize !== d.typo.baseSize) typoChanges.push(`${state.typo.baseSize}px base font size`);
+  if (state.typo.lineHeight !== d.typo.lineHeight) typoChanges.push(`${state.typo.lineHeight.toFixed(2)} line height`);
+  if (state.typo.headingWeight !== d.typo.headingWeight) typoChanges.push(`${state.typo.headingWeight} heading weight`);
+  if (state.typo.bodyWeight !== d.typo.bodyWeight) typoChanges.push(`${state.typo.bodyWeight} body weight`);
+  if (typoChanges.length) parts.push(`For typography, use ${typoChanges.join(', ')}.`);
+
+  if (parts.length === 0) {
+    return 'Update the Velum theme in css/themes.css and css/typography.css.\n\nCurrently showing the default Parchment theme. Adjust the controls to design a custom theme \u2014 only your changes will appear here as a natural language prompt you can paste into Claude.';
+  }
+
+  return `Update the Velum theme in css/themes.css and css/typography.css with these changes:\n\n${parts.join('\n\n')}\n\nDerive all related variables (hover states, subtle variants, borders, shadows, selection colors) from these base values to maintain visual coherence.`;
+}
+
+function generateCSS() {
+  const s = state;
+  return `/* Velum Custom Theme — generated by Theme Atelier */
+
+:root {
+  /* Light Mode */
+  --bg-primary: ${s.light.bgPrimary};
+  --bg-secondary: ${s.light.bgSecondary};
+  --bg-code: ${s.light.bgCode};
+  --bg-code-inline: ${hexToRgba(s.light.accent, 0.12)};
+
+  --text-primary: ${s.light.textPrimary};
+  --text-secondary: ${s.light.textSecondary};
+  --text-muted: ${s.light.textMuted};
+
+  --accent: ${s.light.accent};
+  --accent-hover: ${darkenHex(s.light.accent, 15)};
+  --accent-subtle: ${hexToRgba(s.light.accent, 0.1)};
+  --accent-border: ${hexToRgba(s.light.accent, 0.3)};
+
+  --link: ${s.light.link};
+  --link-hover: ${darkenHex(s.light.link, 20)};
+  --link-underline: ${hexToRgba(s.light.link, 0.3)};
+
+  --selection-bg: ${hexToRgba(s.light.accent, 0.2)};
+}
+
+[data-theme="dark"] {
+  /* Dark Mode */
+  --bg-primary: ${s.dark.bgPrimary};
+  --bg-secondary: ${s.dark.bgSecondary};
+  --bg-code: ${s.dark.bgCode};
+  --bg-code-inline: ${hexToRgba(s.dark.accent, 0.1)};
+
+  --text-primary: ${s.dark.textPrimary};
+  --text-secondary: ${s.dark.textSecondary};
+  --text-muted: ${s.dark.textMuted};
+
+  --accent: ${s.dark.accent};
+  --accent-hover: ${lightenHex(s.dark.accent, 15)};
+  --accent-subtle: ${hexToRgba(s.dark.accent, 0.1)};
+  --accent-border: ${hexToRgba(s.dark.accent, 0.3)};
+
+  --link: ${s.dark.link};
+  --link-hover: ${lightenHex(s.dark.link, 15)};
+  --link-underline: ${hexToRgba(s.dark.link, 0.3)};
+
+  --selection-bg: ${hexToRgba(s.dark.accent, 0.25)};
+}
+
+/* Typography */
+/* Scale ratio: ${s.typo.scale.toFixed(3)} (${s.typo.scale <= 1.2 ? 'Minor Third' : s.typo.scale <= 1.25 ? 'Major Third' : s.typo.scale <= 1.333 ? 'Perfect Fourth' : 'Custom'}) */
+/* Base size: ${s.typo.baseSize}px */
+/* Body line-height: ${s.typo.lineHeight.toFixed(2)} */
+/* Heading weight: ${s.typo.headingWeight} */
+/* Body weight: ${s.typo.bodyWeight} */`;
+}
+
+// ===== COPY =====
+function copyOutput() {
+  const text = document.getElementById('outputText').textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.getElementById('copyBtn');
+    btn.classList.add('copied');
+    btn.innerHTML = `<svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M3 8.5l3 3 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Copied!`;
+    setTimeout(() => {
+      btn.classList.remove('copied');
+      btn.innerHTML = `<svg width="12" height="12" viewBox="0 0 16 16" fill="none"><rect x="5" y="5" width="9" height="9" rx="1.5" stroke="currentColor" stroke-width="1.5"/><path d="M11 5V3.5A1.5 1.5 0 009.5 2h-6A1.5 1.5 0 002 3.5v6A1.5 1.5 0 003.5 11H5" stroke="currentColor" stroke-width="1.5"/></svg> Copy`;
+    }, 2000);
+  });
+}
+
+// ===== COLOR UTILS =====
+function hexToRgba(hex, alpha) {
+  const r = parseInt(hex.slice(1,3), 16);
+  const g = parseInt(hex.slice(3,5), 16);
+  const b = parseInt(hex.slice(5,7), 16);
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+}
+
+function darkenHex(hex, pct) {
+  let r = parseInt(hex.slice(1,3), 16);
+  let g = parseInt(hex.slice(3,5), 16);
+  let b = parseInt(hex.slice(5,7), 16);
+  r = Math.max(0, Math.round(r * (1 - pct/100)));
+  g = Math.max(0, Math.round(g * (1 - pct/100)));
+  b = Math.max(0, Math.round(b * (1 - pct/100)));
+  return '#' + [r,g,b].map(c => c.toString(16).padStart(2,'0')).join('');
+}
+
+function lightenHex(hex, pct) {
+  let r = parseInt(hex.slice(1,3), 16);
+  let g = parseInt(hex.slice(3,5), 16);
+  let b = parseInt(hex.slice(5,7), 16);
+  r = Math.min(255, Math.round(r + (255 - r) * pct/100));
+  g = Math.min(255, Math.round(g + (255 - g) * pct/100));
+  b = Math.min(255, Math.round(b + (255 - b) * pct/100));
+  return '#' + [r,g,b].map(c => c.toString(16).padStart(2,'0')).join('');
+}
+
+// ===== START =====
+init();
+</script>
+</body>
+</html>
