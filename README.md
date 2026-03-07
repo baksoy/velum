@@ -115,7 +115,7 @@ Edit `css/code-theme.css` to customize syntax highlighting colors.
 
 ## Credits
 
-- [Marked](https://marked.js.org/) — Markdown parser
+- [markdown-it](https://github.com/markdown-it/markdown-it) — Markdown parser (with footnote, deflist, abbr, task-lists plugins)
 - [highlight.js](https://highlightjs.org/) — Syntax highlighting
 - [js-yaml](https://github.com/nodeca/js-yaml) — YAML parser
 - [DOMPurify](https://github.com/cure53/DOMPurify) — HTML sanitization

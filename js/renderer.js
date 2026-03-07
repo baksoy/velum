@@ -1,6 +1,7 @@
 /* ==========================================================================
    Velum Markdown Renderer
    Handles markdown parsing, front matter extraction, and code enhancement
+   Uses markdown-it with footnote, deflist, abbr, and task-lists plugins
    ========================================================================== */
 
 const VelumRenderer = {
@@ -42,61 +43,66 @@ const VelumRenderer = {
     },
 
     /**
-     * Configure marked with custom renderer options
+     * Generate a URL-friendly slug from text (strips markdown formatting)
+     * @param {string} text - Text to slugify
+     * @returns {string} - URL-friendly slug
      */
-    configureMarked() {
-        // Custom renderer for enhanced output
-        const renderer = new marked.Renderer();
+    slugify(text) {
+        return text
+            .toLowerCase()
+            .trim()
+            .replace(/<[^>]*>/g, '') // Remove HTML tags
+            .replace(/\*+|\_+|`+/g, '') // Remove markdown emphasis
+            .replace(/[^\w\s-]/g, '') // Remove special characters
+            .replace(/\s+/g, '-') // Replace spaces with dashes
+            .replace(/-+/g, '-') // Remove consecutive dashes
+            .replace(/^-|-$/g, ''); // Remove leading/trailing dashes
+    },
+
+    /**
+     * Configure markdown-it with custom renderer rules
+     */
+    configureMarkdownIt() {
+        const md = window.VelumMarkdownIt;
+        if (!md) return;
+
+        const self = this;
+        const proxy = (tokens, idx, options, env, slf) => slf.renderToken(tokens, idx, options);
 
         // Enhanced heading with IDs for TOC linking
-        renderer.heading = function(text, level) {
-            // Handle both old API (text, level) and new API (token object)
-            let headingText, headingLevel;
-
-            if (typeof text === 'object' && text !== null) {
-                // New API: text is a token object
-                headingText = text.text;
-                headingLevel = text.depth;
-            } else {
-                // Old API: separate parameters
-                headingText = text;
-                headingLevel = level;
-            }
-
-            const slug = VelumRenderer.slugify(headingText);
-            return `<h${headingLevel} id="${slug}">${headingText}</h${headingLevel}>`;
+        const defaultHeadingOpen = md.renderer.rules.heading_open || proxy;
+        md.renderer.rules.heading_open = function (tokens, idx, options, env, slf) {
+            const token = tokens[idx];
+            // Next token is inline with the heading text
+            const inlineToken = tokens[idx + 1];
+            const text = inlineToken ? (inlineToken.content || '') : '';
+            const slug = self.slugify(text) || 'heading';
+            token.attrSet('id', slug);
+            return defaultHeadingOpen(tokens, idx, options, env, slf);
         };
 
-        // Enhanced code blocks with language labels and copy buttons
-        renderer.code = function(code, language) {
-            // Handle both old API (code, language) and new API (token object)
-            let codeContent, codeLang;
-
-            if (typeof code === 'object' && code !== null) {
-                // New API: code is a token object
-                codeContent = code.text;
-                codeLang = code.lang || 'plaintext';
-            } else {
-                // Old API: separate parameters
-                codeContent = code;
-                codeLang = language || 'plaintext';
-            }
+        // Enhanced code blocks: mermaid, Highlight.js, copy button
+        md.renderer.rules.fence = function (tokens, idx, options, env, slf) {
+            const token = tokens[idx];
+            const info = token.info ? token.info.trim() : '';
+            const lang = info.split(/\s+/)[0] || 'plaintext';
+            const code = token.content;
 
             // Mermaid diagram support
-            if (codeLang === 'mermaid') {
-                return `<div class="mermaid">${VelumRenderer.escapeHtml(codeContent)}</div>`;
+            if (lang === 'mermaid') {
+                return `<div class="mermaid">${self.escapeHtml(code)}</div>`;
             }
 
-            const validLang = hljs.getLanguage(codeLang) ? codeLang : 'plaintext';
+            // Syntax highlighting with Highlight.js
+            const validLang = hljs.getLanguage(lang) ? lang : 'plaintext';
             let highlighted;
-
             try {
-                highlighted = hljs.highlight(codeContent, { language: validLang }).value;
+                highlighted = hljs.highlight(code, { language: validLang }).value;
             } catch (e) {
-                highlighted = hljs.highlightAuto(codeContent).value;
+                highlighted = hljs.highlightAuto(code).value;
             }
 
-            return `<pre data-language="${codeLang}">
+            return `<pre data-language="${lang}">
                 <button class="code-copy-btn" aria-label="Copy code">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
@@ -108,135 +114,45 @@ const VelumRenderer = {
             </pre>`;
         };
 
-        // 2.8 Enhanced images with figure wrapper for captions
-        renderer.image = function(href, title, text) {
-            // Handle both old API (href, title, text) and new API (token object)
-            let imgHref, imgTitle, imgText;
+        // Enhanced images with figure wrapper for captions (title = caption)
+        md.renderer.rules.image = function (tokens, idx, options, env, slf) {
+            const token = tokens[idx];
+            const src = token.attrGet('src') || '';
+            const title = token.attrGet('title') || '';
+            const altText = slf.renderInlineAsText(token.children || [], options, env);
 
-            if (typeof href === 'object' && href !== null) {
-                // New API: href is a token object
-                imgHref = href.href;
-                imgTitle = href.title || '';
-                imgText = href.text || '';
-            } else {
-                // Old API: separate parameters
-                imgHref = href;
-                imgTitle = title || '';
-                imgText = text || '';
+            const titleAttr = title ? ` title="${self.escapeHtml(title)}"` : '';
+            const imgTag = `<img src="${self.escapeHtml(src)}" alt="${self.escapeHtml(altText)}"${titleAttr} loading="lazy">`;
+
+            if (title) {
+                return `<figure>${imgTag}<figcaption>${self.escapeHtml(title)}</figcaption></figure>`;
             }
-
-            const titleAttr = imgTitle ? ` title="${imgTitle}"` : '';
-            const imgTag = `<img src="${imgHref}" alt="${imgText}"${titleAttr} loading="lazy">`;
-
-            // If there's a title, wrap in figure with figcaption
-            if (imgTitle) {
-                return `<figure>${imgTag}<figcaption>${VelumRenderer.escapeHtml(imgTitle)}</figcaption></figure>`;
-            }
-
             return imgTag;
         };
 
-        // 1.7 Enhanced blockquotes with GFM alert detection
-        renderer.blockquote = function(quote) {
-            // Handle both old API (quote string) and new API (token object)
-            let quoteContent;
-
-            if (typeof quote === 'object' && quote !== null) {
-                // New API: quote is a token object with tokens array
-                quoteContent = this.parser ? this.parser.parse(quote.tokens) : quote.text || '';
-            } else {
-                // Old API: quote is already HTML string
-                quoteContent = quote;
+        // Map contains-task-list to task-list for our CSS
+        const defaultBulletListOpen = md.renderer.rules.bullet_list_open || proxy;
+        md.renderer.rules.bullet_list_open = function (tokens, idx, options, env, slf) {
+            const token = tokens[idx];
+            const cls = token.attrGet('class') || '';
+            if (cls.includes('contains-task-list')) {
+                token.attrSet('class', 'task-list');
             }
-
-            // Detect GFM alert syntax
-            const alertRegex = /^\s*<p>\s*\[!(NOTE|TIP|WARNING|IMPORTANT|CAUTION)\]\s*/i;
-            const match = quoteContent.match(alertRegex);
-
-            if (match) {
-                const alertType = match[1].toLowerCase();
-                const cleanContent = quoteContent.replace(alertRegex, '<p>');
-                return `<blockquote class="alert-${alertType}"><div class="alert-title">${match[1]}</div>${cleanContent}</blockquote>`;
-            }
-
-            return `<blockquote>${quoteContent}</blockquote>`;
+            return defaultBulletListOpen(tokens, idx, options, env, slf);
         };
-
-        // Task list support
-        renderer.listitem = function(text, task, checked) {
-            // Handle both old API (text, task, checked) and new API (token object)
-            let itemText, isTask, isChecked;
-
-            if (typeof text === 'object' && text !== null) {
-                // New API: text is a token object
-                isTask = text.task;
-                isChecked = text.checked;
-                // Parse the tokens to get the text content
-                itemText = this.parser ? this.parser.parse(text.tokens) : text.text || '';
-            } else {
-                // Old API: separate parameters
-                itemText = text;
-                isTask = task;
-                isChecked = checked;
-            }
-
-            if (isTask) {
-                const checkedAttr = isChecked ? ' checked' : '';
-                return `<li><input type="checkbox"${checkedAttr} disabled>${itemText}</li>`;
-            }
-            return `<li>${itemText}</li>`;
-        };
-
-        renderer.list = function(body, ordered, start) {
-            // Handle both old API (body, ordered, start) and new API (token object)
-            let listBody, isOrdered, startNum;
-
-            if (typeof body === 'object' && body !== null) {
-                // New API: body is a token object
-                isOrdered = body.ordered;
-                startNum = body.start;
-                // Parse the items
-                listBody = body.items.map(item => {
-                    return this.listitem(item);
-                }).join('\n');
-            } else {
-                // Old API: separate parameters
-                listBody = body;
-                isOrdered = ordered;
-                startNum = start;
-            }
-
-            const tag = isOrdered ? 'ol' : 'ul';
-            const startAttr = isOrdered && startNum !== 1 ? ` start="${startNum}"` : '';
-            const taskClass = listBody.includes('type="checkbox"') ? ' class="task-list"' : '';
-            return `<${tag}${startAttr}${taskClass}>${listBody}</${tag}>`;
-        };
-
-        // Configure marked options
-        marked.setOptions({
-            renderer: renderer,
-            gfm: true,
-            breaks: false,
-            pedantic: false,
-            smartLists: true,
-            smartypants: true
-        });
     },
 
     /**
-     * Generate a URL-friendly slug from text
-     * @param {string} text - Text to slugify
-     * @returns {string} - URL-friendly slug
+     * Post-process HTML for GFM alert blockquotes
+     * @param {string} html - Rendered HTML
+     * @returns {string} - HTML with alert blockquotes enhanced
      */
-    slugify(text) {
-        return text
-            .toLowerCase()
-            .trim()
-            .replace(/<[^>]*>/g, '') // Remove HTML tags
-            .replace(/[^\w\s-]/g, '') // Remove special characters
-            .replace(/\s+/g, '-') // Replace spaces with dashes
-            .replace(/-+/g, '-') // Remove consecutive dashes
-            .replace(/^-|-$/g, ''); // Remove leading/trailing dashes
+    processGfmAlerts(html) {
+        const alertRegex = /<blockquote>\s*<p>\s*\[!(NOTE|TIP|WARNING|IMPORTANT|CAUTION)\]\s*/gi;
+        return html.replace(alertRegex, (match, type) => {
+            const alertType = type.toLowerCase();
+            return `<blockquote class="alert-${alertType}"><div class="alert-title">${type}</div><p>`;
+        });
     },
 
     /**
@@ -248,14 +164,24 @@ const VelumRenderer = {
         // Parse front matter
         const { frontMatter, content } = this.parseFrontMatter(markdown);
 
-        // Render markdown
-        let html = marked.parse(content);
+        // Render markdown with markdown-it
+        const md = window.VelumMarkdownIt;
+        if (!md) {
+            console.error('VelumMarkdownIt not loaded');
+            return { html: '', frontMatter };
+        }
+
+        let html = md.render(content);
+
+        // Post-process GFM alert blockquotes
+        html = this.processGfmAlerts(html);
 
         // Sanitize HTML with DOMPurify to prevent XSS
         if (typeof DOMPurify !== 'undefined') {
             html = DOMPurify.sanitize(html, {
                 USE_PROFILES: { html: true },
-                ADD_ATTR: ['target', 'loading'],
+                ADD_ATTR: ['target', 'loading', 'id'],
+                ADD_TAGS: ['section'],
                 ALLOW_DATA_ATTR: false
             });
         }
@@ -395,5 +321,5 @@ const VelumRenderer = {
     }
 };
 
-// Initialize marked configuration on load
-VelumRenderer.configureMarked();
+// Initialize markdown-it configuration on load (after bundle)
+VelumRenderer.configureMarkdownIt();

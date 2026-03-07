@@ -307,19 +307,22 @@ ul ul ul > li::marker {
     content: '▪ ';
 }
 
-/* Task Lists / Checkboxes */
-ul.task-list {
+/* Task Lists / Checkboxes (markdown-it-task-lists uses .contains-task-list) */
+ul.task-list,
+ul.contains-task-list {
     list-style: none;
     padding-left: 0;
 }
 
-ul.task-list li {
+ul.task-list li,
+ul.contains-task-list li {
     display: flex;
     align-items: flex-start;
     gap: var(--space-3);
 }
 
-ul.task-list input[type="checkbox"] {
+ul.task-list input[type="checkbox"],
+ul.contains-task-list input[type="checkbox"] {
     appearance: none;
     -webkit-appearance: none;
     width: 1.1em;
@@ -332,12 +335,14 @@ ul.task-list input[type="checkbox"] {
     transition: all 0.2s ease;
 }
 
-ul.task-list input[type="checkbox"]:checked {
+ul.task-list input[type="checkbox"]:checked,
+ul.contains-task-list input[type="checkbox"]:checked {
     background: var(--accent);
     border-color: var(--accent);
 }
 
-ul.task-list input[type="checkbox"]:checked::after {
+ul.task-list input[type="checkbox"]:checked::after,
+ul.contains-task-list input[type="checkbox"]:checked::after {
     content: '✓';
     display: flex;
     justify-content: center;

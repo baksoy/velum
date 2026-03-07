@@ -6,7 +6,9 @@
   "scripts": {
     "start": "npx serve -l 3000",
     "dev": "npx live-server --port=3000 --open=/",
-    "serve": "npx http-server -p 3000 -o"
+    "serve": "npx http-server -p 3000 -o",
+    "build": "npm run build:markdown",
+    "build:markdown": "esbuild build/markdown-entry.js --bundle --format=iife --outfile=js/markdown-it-bundle.js"
   },
   "keywords": [
     "markdown",
@@ -21,6 +23,14 @@
     "type": "git",
     "url": ""
   },
-  "devDependencies": {},
-  "dependencies": {}
+  "devDependencies": {
+    "esbuild": "^0.24.0"
+  },
+  "dependencies": {
+    "markdown-it": "^14.1.0",
+    "markdown-it-footnote": "^4.0.0",
+    "markdown-it-deflist": "^3.0.0",
+    "markdown-it-abbr": "^2.0.0",
+    "markdown-it-task-lists": "^2.1.1"
+  }
 }
